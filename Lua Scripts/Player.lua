@@ -1,20 +1,51 @@
 dofile("../Lua Scripts/Vector.lua")
 
---Position
-playerPos = Vector.New({x = 0, y = 0});
+Player = {pos = Vector:New({x = 0, y = 0}),
+			speed = 75,
+			lookDirection = 0}
 
-function setPlayerPos(x, y)
-	playerPos.x = x
-	playerPos.y = y
+function Player:New(p)
+	p = p or {}
+	self.__index = self
+	setmetatable(p, self)
+	return p
 end
 
-function getPlayerPos()
-	return playerPos.x, playerPos.y
+--Game Logic
+function Player:Start()
+	--playerPos = Vector:New({x = 0, y = 0})
+	--dir = Vector:New({x = 0, y = 0})
+	--movementSpeed = 75
 end
 
---Color
-playerColor = {r = 0, g = 0, b = 0, a = 255}
+function Player:Update(dt)
 
-function changeColorR(r, Red)
-	playerColor[r] = Red
+	self:updateMovement(dt)	
+	
+end
+
+--Update Movements
+function Player:updateMovement(dt)
+	local dir = Vector:New()
+	dir.x, dir.y = CheckMovement()
+
+	if((dir.x > 0 or dir.x < 0) and (dir.y > 0 or dir.y < 0))then
+		dir.x = dir.x * 0.707
+		dir.y = dir.y * 0.707
+	end
+		
+	local movementLength = Vector:New({x = 0, y = 0})
+	movementLength = dir * self.speed * dt
+
+	self.pos = self.pos + movementLength
+end
+
+--Positions
+function Player:setPlayerPos(x, y)
+	self.pos.x = x
+	self.pos.y = y
+end
+
+function Player:getPlayerPos()
+	return self.pos.x, self.pos.y
 end

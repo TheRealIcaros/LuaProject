@@ -18,6 +18,9 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Enemy.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -26,19 +29,28 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Lua Scripts\Vector.lua">
-      <Filter>Lua</Filter>
-    </None>
-    <None Include="..\Lua Scripts\Player.lua">
-      <Filter>Lua</Filter>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="Player.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Include.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Enemy.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Lua Scripts\Enemy.lua">
+      <Filter>Lua</Filter>
+    </None>
+    <None Include="..\Lua Scripts\EntityHandler.lua">
+      <Filter>Lua</Filter>
+    </None>
+    <None Include="..\Lua Scripts\Player.lua">
+      <Filter>Lua</Filter>
+    </None>
+    <None Include="..\Lua Scripts\Vector.lua">
+      <Filter>Lua</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -18,6 +18,22 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Enemy.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Player.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Enemy.hpp" />
+    <ClInclude Include="Include.h" />
+    <ClInclude Include="Player.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Lua Scripts\Enemy.lua" />
+    <None Include="..\Lua Scripts\EntityHandler.lua" />
+    <None Include="..\Lua Scripts\Player.lua" />
+    <None Include="..\Lua Scripts\Vector.lua" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{031010F5-BD1E-4D03-A725-29507A946991}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
@@ -155,18 +171,6 @@
       <AdditionalLibraryDirectories>$(SolutionDir)2.4.2\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="Player.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\Lua Scripts\Player.lua" />
-    <None Include="..\Lua Scripts\Vector.lua" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Include.h" />
-    <ClInclude Include="Player.hpp" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

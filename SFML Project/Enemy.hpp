@@ -1,17 +1,17 @@
-#ifndef PLAYER_HPP
-#define PLAYER_HPP
+#ifndef ENEMY_HPP
+#define ENEMY_HPP
 
 #include "Include.h"
 
-class Player : public Drawable
+class Enemy : public Drawable
 {
 private:
-	Texture texturePlayer;
-	Sprite spritePlayer;
+	Texture textureEnemy;
+	Sprite spriteEnemy;
 	int lookDirection;
 public:
-	Player(float x, float y, lua_State* L);
-	~Player();
+	Enemy(float x, float y, lua_State* L);
+	~Enemy();
 	void update(lua_State* L);	//(float dt, lua_State* L);
 	void draw(RenderTarget &target, RenderStates states)const;
 
