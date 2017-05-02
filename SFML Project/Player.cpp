@@ -1,12 +1,12 @@
 #include "Player.hpp"
 
-Player::Player(float x, float y, lua_State* L)
+Player::Player(lua_State* L)
 {
 	this->texturePlayer.loadFromFile("../Images/player.png");
 	this->spritePlayer.setTexture(this->texturePlayer);
 	this->lookDirection = 0;
 	this->spritePlayer.setTextureRect(sf::IntRect(0, 0, 16, 16));
-	this->spritePlayer.setPosition(Vector2f(x, y));
+	this->spritePlayer.setPosition(Vector2f(0.0, 0.0));
 
 	/*lua_getglobal(L, "setPlayerPos");
 	lua_pushinteger(L, x);
@@ -23,9 +23,10 @@ Player::~Player()
 {
 }
 
-void Player::update(lua_State* L)	//(float dt, lua_State* L)
+void Player::update(lua_State* L, float dt)	//(float dt, lua_State* L)
 {
 	this->setSpritePosition(L);
+	this->setLookDirection(L);
 }
 
 void Player::draw(RenderTarget &target, RenderStates states)const
@@ -44,4 +45,21 @@ void Player::setSpritePosition(lua_State* L)
 		this->spritePlayer.setPosition(x, y);
 	}
 	lua_pop(L, 2);
+}
+
+void Player::setLookDirection(lua_State* L)
+{
+	lua_getglobal(L, "getPlayerLookDirection");
+	lua_pcall(L, 0, 1, 0);
+	if (lua_isinteger(L, -1))
+	{
+		double y = lua_tointeger(L, -1);
+		this->spritePlayer.setTextureRect(sf::IntRect(0, y * 16, 16, 16));
+	}
+	lua_pop(L, 1);
+}
+
+Sprite Player::getSprite()
+{
+	return this->spritePlayer;
 }

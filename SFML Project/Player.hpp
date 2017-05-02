@@ -10,12 +10,15 @@ private:
 	Sprite spritePlayer;
 	int lookDirection;
 public:
-	Player(float x, float y, lua_State* L);
+	Player(lua_State* L);
 	~Player();
-	void update(lua_State* L);	//(float dt, lua_State* L);
+	void update(lua_State* L, float dt);	//(float dt, lua_State* L);
 	void draw(RenderTarget &target, RenderStates states)const;
 
 	void setSpritePosition(lua_State* L);
+	void setLookDirection(lua_State* L);
+
+	Sprite getSprite();
 };
 
 #endif // !

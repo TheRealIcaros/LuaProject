@@ -1,6 +1,6 @@
 dofile("../Lua Scripts/Vector.lua")
 
-Enemy = {pos = Vector:New(), 
+Enemy = {pos = Vector:New({x = 50, y = 50}), 
 			speed = 50}
 
 function Enemy:New(e)
@@ -24,12 +24,12 @@ end
 
 --Update Movements
 function Enemy:updateMovement(playerPos, dt)
-	local dir = Vector:New()
+	local dir = Vector:New({x = 0, y = 0})
 	dir = playerPos - self.pos
 	dir:Normalize()
-
-	local movementLength = Vector:New()
-	movementLength = dir * speed * dt
+	
+	local movementLength = Vector:New({x = 0, y = 0})
+	movementLength = dir * self.speed * dt
 
 	self.pos = self.pos + movementLength
 end

@@ -1,5 +1,5 @@
 
-Vector = {x = 0, y = 0, 
+Vector = {x = 0, y = 0,
 	Normalize = function(self) 
 	local length = self:Length() 
 	self.x = self.x / length
@@ -14,11 +14,11 @@ function Vector:New(v)
 	return v
 end
 
-function Vector:Normalize() 
-	local length = self:Length() 
-	self.x = self.x / length
-	self.y = self.y / length
-end
+--function Vector:Normalize() 
+	--local length = self:Length() 
+	--self.x = self.x / length
+	--self.y = self.y / length
+--end
 
 function Vector:Length()
 	return math.sqrt(self.x ^ 2 + self.y ^ 2)

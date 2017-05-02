@@ -1,11 +1,13 @@
 #include "Include.h"
-#include "Player.hpp"
-#include "Enemy.hpp"
+#include "EntityContainer.hpp"
 
 static int CheckMovement(lua_State* L);
 
+int lookDirection = 0;
+
 int main()
 {
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 	sf::RenderWindow window(sf::VideoMode(400, 400), "The legend of Lucas!");
 	window.setFramerateLimit(60);
 
@@ -27,8 +29,7 @@ int main()
 	lua_getglobal(L, "Start");
 	lua_pcall(L, 0, 0, 0);
 
-	Player p(0, 0, L);
-	Enemy e(50, 50, L);
+	EntityContainer et(L);
 	Clock dt;
 
 	while (window.isOpen())
@@ -49,11 +50,11 @@ int main()
 			lua_pop(L, 1);
 		}
 
-		p.update(L);
+		et.update(L, dt.getElapsedTime().asSeconds());
+		dt.restart();
 
 		window.clear();
-		window.draw(p);
-		window.draw(e);
+		window.draw(et);
 		window.display();
 	}
 
@@ -66,40 +67,33 @@ static int CheckMovement(lua_State* L)
 {
 	Vector2f dir;
 
-	if (Keyboard::isKeyPressed(Keyboard::W))
-	{
-		dir.y = -1;
-		cout << "W" << endl;
-	}
-	if (Keyboard::isKeyPressed(Keyboard::S))
-	{
-		cout << "S" << endl;
-		dir.y = 1;
-	}
-
 	if (Keyboard::isKeyPressed(Keyboard::D))
 	{
 		dir.x = 1;
-		cout << "D" << endl;
+		lookDirection = 2;
 	}
 	if (Keyboard::isKeyPressed(Keyboard::A))
 	{
-		cout << "A" << endl;
 		dir.x = -1;
+		lookDirection = 3;
 	}
 
-	/*
-	if ((dir.x > 0 || dir.x < 0) && (dir.y > 0 || dir.y < 0))
+	if (Keyboard::isKeyPressed(Keyboard::W))
 	{
-		dir.x = dir.x * 0.707;
-		dir.y = dir.y * 0.707;
+		dir.y = -1;
+		lookDirection = 1;
 	}
-	*/
+	if (Keyboard::isKeyPressed(Keyboard::S))
+	{
+		dir.y = 1;
+		lookDirection = 0;
+	}
 
 	lua_pushnumber(L, dir.x);
 	lua_pushnumber(L, dir.y);
+	lua_pushinteger(L, lookDirection);
 
-	return 2;
+	return 3;
 }
 
 /*if (Keyboard::isKeyPressed(sf::Keyboard::Left) && !pressed)
