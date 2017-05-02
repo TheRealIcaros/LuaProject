@@ -2,8 +2,8 @@
 #include "EntityContainer.hpp"
 
 static int CheckMovement(lua_State* L);
-
 int lookDirection = 0;
+bool wasPressed;
 
 int main()
 {
@@ -40,26 +40,33 @@ int main()
 			if (event.type == sf::Event::Closed || Keyboard::isKeyPressed(Keyboard::Escape))
 				window.close();
 		}
-
+		
 		lua_getglobal(L, "Update");
 		lua_pushnumber(L, dt.restart().asSeconds());
-		error = lua_pcall(L, 1, 0, 0);
+		int error = lua_pcall(L, 1, 0, 0);
 		if (error)
 		{
 			cout << "Update Error msg: " << lua_tostring(L, -1) << endl;
 			lua_pop(L, 1);
 		}
 
+		bool isPressed = Keyboard::isKeyPressed(Keyboard::O);
+		if (isPressed && !wasPressed)
+		{
+			wasPressed = true;
+			et.addEnemy(L);
+		}
+
 		et.update(L, dt.getElapsedTime().asSeconds());
-		dt.restart();
 
 		window.clear();
 		window.draw(et);
 		window.display();
+
+		wasPressed = isPressed;
 	}
 
 	lua_close(L);
-
 	return 0;
 }
 
@@ -95,6 +102,7 @@ static int CheckMovement(lua_State* L)
 
 	return 3;
 }
+
 
 /*if (Keyboard::isKeyPressed(sf::Keyboard::Left) && !pressed)
 {

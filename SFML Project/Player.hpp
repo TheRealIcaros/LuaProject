@@ -9,6 +9,11 @@ private:
 	Texture texturePlayer;
 	Sprite spritePlayer;
 	int lookDirection;
+	int spriteAnimation;
+
+	int hp;
+
+	Clock time;
 public:
 	Player(lua_State* L);
 	~Player();
@@ -18,7 +23,10 @@ public:
 	void setSpritePosition(lua_State* L);
 	void setLookDirection(lua_State* L);
 
-	Sprite getSprite();
+	Sprite getSprite()const;
+	void updateSpriteAnimation();
+	void damageHp();
+	int getHp();
 };
 
 #endif // !

@@ -5,8 +5,9 @@ dofile("../Lua Scripts/Enemy.lua")
 function Start()
 	player1 = Player:New()
 	
-	enemyContainer = {e1 = Enemy:New()}
-	
+	enemyContainer = {}
+	nrOfEnemys = 0
+
 	--enemy1 = Enemy:New()
 	--enemy2 = Enemy:New()
 end
@@ -32,4 +33,9 @@ end
 
 function getPlayerLookDirection()
 	return player1:getPlayerLookDirection()
+end
+
+function addEnemy(x, y)
+	enemyContainer[nrOfEnemys + 1] = Enemy:New({x = x, y = y})
+	nrOfEnemys = nrOfEnemys + 1
 end

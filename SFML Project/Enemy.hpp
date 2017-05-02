@@ -11,14 +11,14 @@ private:
 	int lookDirection;
 public:
 	Enemy();
-	Enemy(lua_State* L);
+	Enemy(lua_State* L, float x = 0, float y = 0);
 	~Enemy();
-	void update(lua_State* L, float dt);
+	void update(lua_State* L, float dt, int i);
 	void draw(RenderTarget &target, RenderStates states)const;
 
-	void setSpritePosition(lua_State* L);
+	void setSpritePosition(lua_State* L, int i);
 
-	Sprite getSprite();
+	Sprite getSprite()const;
 };
 
 #endif // !

@@ -10,14 +10,19 @@ class EntityContainer : public Drawable
 private:
 	Player* player;
 	Enemy* *enemys;
-	int nrOf;
-	int cap;
+	vector<Enemy*> enemys2;
+	Clock hpClock;
 
 public:
+	EntityContainer();
 	EntityContainer(lua_State* L);
 	~EntityContainer();
 	void update(lua_State* L, float dt);	//(float dt, lua_State* L);
 	void draw(RenderTarget &target, RenderStates states)const;
+
+	void addEnemy(lua_State* L, float x = 200, float y = 200);
+	void playerColition(int i);
+	void wallColition();
 };
 
 #endif // !
