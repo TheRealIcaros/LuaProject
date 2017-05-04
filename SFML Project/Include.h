@@ -5,6 +5,7 @@
 #include <SFML\Graphics.hpp>
 #include <iostream>	
 #include <vector>
+#include <memory>
 using namespace std;
 using namespace sf;
 

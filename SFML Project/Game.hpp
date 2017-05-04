@@ -7,18 +7,25 @@
 class Game : public Drawable
 {
 private:
-	EntityContainer et;
+	/*RectangleShape start;
+	RectangleShape editor;
+	RectangleShape exit;*/
+
 	lua_State* L;
+	EntityContainer et;
 	Clock dt;
 
-	int lookDirection;
+	//int lookDirection;
+	bool wasPressed;
+	int selectedBlock;
+
 public:
-	Game(lua_State* L);
+	Game();
 	~Game();
-	void update(lua_State* L);
+	void update();
 	void draw(RenderTarget &target, RenderStates states)const;
 
-	//static int CheckMovement(lua_State* L);
+	static int CheckMovement(lua_State* L);
 };
 
 #endif // !

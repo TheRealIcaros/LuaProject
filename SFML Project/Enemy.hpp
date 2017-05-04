@@ -15,6 +15,8 @@ public:
 	~Enemy();
 	void update(lua_State* L, float dt, int i);
 	void draw(RenderTarget &target, RenderStates states)const;
+	Enemy(const Enemy &origO);
+	void operator=(const Enemy &origO);
 
 	void setSpritePosition(lua_State* L, int i);
 

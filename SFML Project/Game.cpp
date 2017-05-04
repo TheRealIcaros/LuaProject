@@ -1,57 +1,120 @@
 #include "Game.hpp"
 
-Game::Game(lua_State* L)
+Game::Game()
 {
-	this->L = L;
-	bool wasPressed = false;
+	/*this->start.setSize(Vector2f(200.0f, 50.0f));
+	this->start.setPosition(Vector2f(100.0f, 50.0f));
+	this->start.setFillColor(Color::Green);
 
-	int lookDirection = 0;
+	this->editor.setSize(Vector2f(200.0f, 50.0f));
+	this->editor.setPosition(Vector2f(100.0f, 150.0f));
+	this->editor.setFillColor(Color::Yellow);
+
+	this->exit.setSize(Vector2f(200.0f, 50.0f));
+	this->exit.setPosition(Vector2f(100.0f, 250.0f));
+	this->exit.setFillColor(Color::Red);*/
+
+	this->L = luaL_newstate();
+	luaL_openlibs(this->L);
+
+	lua_pushcfunction(this->L, Game::CheckMovement);
+	lua_setglobal(this->L, "CheckMovement");
+
+	int error = luaL_loadfile(this->L, "../Lua Scripts/EntityHandler.lua") || lua_pcall(this->L, 0, 1, 0);
+	if (error)
+	{
+		cout << "Error msg: " << lua_tostring(this->L, -1) << endl;
+		lua_pop(this->L, 1);
+	}
+
+	lua_getglobal(L, "Start");
+	lua_pcall(this->L, 0, 0, 0);
+
+	this->et = EntityContainer(this->L);
+
+	this->wasPressed = false;
+	this->selectedBlock = 0;
 }
 
 Game::~Game()
 {
-	//lua_close(L);
+	lua_close(this->L);
 }
 
-void Game::update(lua_State* L)
+void Game::update()
 {
-	
+	lua_getglobal(this->L, "Update");
+	lua_pushnumber(this->L, this->dt.getElapsedTime().asSeconds());
+	int error = lua_pcall(this->L, 1, 0, 0);
+	if (error)
+	{
+		cout << "Update Error msg: " << lua_tostring(this->L, -1) << endl;
+		lua_pop(this->L, 1);
+	}
+	bool isPressed = Keyboard::isKeyPressed(Keyboard::O);
+	if (isPressed && !this->wasPressed)
+	{
+		this->wasPressed = true;
+		et.addEnemy(this->L);
+	}
+	this->et.update(this->L, this->dt.getElapsedTime().asSeconds());
+
+	this->dt.restart();
+
+	/*Vector2i pos = Mouse::getPosition(window);
+	cout << pos.x << ", " << pos.y << endl;*/
+
+	this->wasPressed = isPressed;
 }
 
 void Game::draw(RenderTarget &target, RenderStates states)const
 {
+	/*target.draw(this->start, states);
+	target.draw(this->editor, states);
+	target.draw(this->exit, states);*/
 
+	target.draw(this->et, states);
 }
 
-//int Game::CheckMovement(lua_State* L)
-//{
-//	Vector2f dir;
-//
-//	if (Keyboard::isKeyPressed(Keyboard::D))
-//	{
-//		dir.x = 1;
-//		lookDirection = 2;
-//	}
-//	if (Keyboard::isKeyPressed(Keyboard::A))
-//	{
-//		dir.x = -1;
-//		this->lookDirection = 3;
-//	}
-//
-//	if (Keyboard::isKeyPressed(Keyboard::W))
-//	{
-//		dir.y = -1;
-//		this->lookDirection = 1;
-//	}
-//	if (Keyboard::isKeyPressed(Keyboard::S))
-//	{
-//		dir.y = 1;
-//		this->lookDirection = 0;
-//	}
-//
-//	lua_pushnumber(L, dir.x);
-//	lua_pushnumber(L, dir.y);
-//	lua_pushinteger(L, this->lookDirection);
-//
-//	return 3;
-//}
+int Game::CheckMovement(lua_State* L)
+{
+	Vector2f dir;
+	if (lua_isinteger(L, -1))
+	{
+		int lookDirection = lua_tointeger(L, -1);
+		lua_pop(L, 1);
+
+		if (Keyboard::isKeyPressed(Keyboard::D))
+		{
+			dir.x = 1;
+			lookDirection = 2;
+		}
+		if (Keyboard::isKeyPressed(Keyboard::A))
+		{
+			dir.x = -1;
+			lookDirection = 3;
+		}
+
+		if (Keyboard::isKeyPressed(Keyboard::W))
+		{
+			dir.y = -1;
+			lookDirection = 1;
+		}
+		if (Keyboard::isKeyPressed(Keyboard::S))
+		{
+			dir.y = 1;
+			lookDirection = 0;
+		}
+
+		lua_pushnumber(L, dir.x);
+		lua_pushnumber(L, dir.y);
+		lua_pushinteger(L, lookDirection);
+
+		return 3;
+	}
+	else
+	{
+		lua_pop(L, 1);
+		return 0;
+	}
+}

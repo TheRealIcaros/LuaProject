@@ -15,7 +15,7 @@ private:
 
 	Clock time;
 public:
-	Player(lua_State* L);
+	Player();
 	~Player();
 	void update(lua_State* L, float dt);	//(float dt, lua_State* L);
 	void draw(RenderTarget &target, RenderStates states)const;

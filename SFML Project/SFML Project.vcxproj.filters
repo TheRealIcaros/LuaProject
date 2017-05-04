@@ -64,5 +64,14 @@
     <None Include="..\Lua Scripts\Vector.lua">
       <Filter>Lua</Filter>
     </None>
+    <None Include="..\Lua Scripts\Game.lua">
+      <Filter>Lua</Filter>
+    </None>
+    <None Include="..\Lua Scripts\Editor.lua">
+      <Filter>Lua</Filter>
+    </None>
+    <None Include="..\Lua Scripts\Node.lua">
+      <Filter>Lua</Filter>
+    </None>
   </ItemGroup>
 </Project>

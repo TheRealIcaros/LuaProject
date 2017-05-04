@@ -9,6 +9,7 @@ Enemy::Enemy(lua_State* L, float x, float y)
 {
 	this->textureEnemy.loadFromFile("../Images/ghost.png");
 	this->spriteEnemy.setTexture(this->textureEnemy);
+
 	this->lookDirection = 0;
 	this->spriteEnemy.setTextureRect(sf::IntRect(0, 0, 16, 16));
 	this->spriteEnemy.setPosition(Vector2f(x, y));
@@ -27,6 +28,23 @@ void Enemy::update(lua_State* L, float dt, int i)
 void Enemy::draw(RenderTarget &target, RenderStates states)const
 {
 	target.draw(this->spriteEnemy, states);
+}
+
+Enemy::Enemy(const Enemy &origO)
+{
+	this->textureEnemy = origO.textureEnemy;
+	this->spriteEnemy = origO.spriteEnemy;
+	this->lookDirection = origO.lookDirection;
+}
+
+void Enemy::operator=(const Enemy &origO)
+{
+	if (this != &origO)
+	{
+		this->textureEnemy = origO.textureEnemy;
+		this->spriteEnemy = origO.spriteEnemy;
+		this->lookDirection = origO.lookDirection;
+	}
 }
 
 void Enemy::setSpritePosition(lua_State* L, int i)

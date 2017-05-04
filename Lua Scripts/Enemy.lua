@@ -31,6 +31,8 @@ function Enemy:updateMovement(playerPos, dt)
 	local movementLength = Vector:New({x = 0, y = 0})
 	movementLength = dir * self.speed * dt
 
+	--print(self.pos)
+
 	self.pos = self.pos + movementLength
 end
 

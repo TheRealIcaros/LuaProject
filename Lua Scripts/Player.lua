@@ -27,7 +27,7 @@ end
 --Update Movements
 function Player:updateMovement(dt)
 	local dir = Vector:New()
-	dir.x, dir.y, self.lookDirection = CheckMovement()
+	dir.x, dir.y, self.lookDirection = CheckMovement(self.lookDirection)
 
 	if((dir.x > 0 or dir.x < 0) and (dir.y > 0 or dir.y < 0))then
 		dir.x = dir.x * 0.707

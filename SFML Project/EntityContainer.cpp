@@ -7,47 +7,54 @@ EntityContainer::EntityContainer()
 
 EntityContainer::EntityContainer(lua_State* L)
 {
-	this->player = new Player(L);
+	this->player = Player();
+	//this->enemys = vector<Enemy>();
 
 	//this->enemys = new Enemy*[this->cap];
 
-	addEnemy(L);
+	//addEnemy(L);
 }
 
 EntityContainer::~EntityContainer()
 {
-	for (int i = 0; i < this->enemys2.size(); i++)
-	{
-		delete this->enemys2.at(i);
-	}
 
-	delete this->player;
+	for (int i = 0; i < this->enemys.size(); i++)
+	{
+		delete this->enemys[i];
+	}
+	this->enemys.clear();
+}
+
+EntityContainer::EntityContainer(const EntityContainer &originalObject)
+{
+	
+}
+
+void EntityContainer::operator=(const EntityContainer &originalObject)
+{
+
 }
 
 void EntityContainer::update(lua_State* L, float dt)
 {
-	this->player->update(L, dt);
+	this->player.update(L, dt);
 
-	for (int i = 0; i < this->enemys2.size(); i++)
+	for (int i = 0; i < this->enemys.size(); i++)
 	{
-		this->enemys2.at(i)->update(L, dt, i + 1);
+		this->enemys[i]->update(L, dt, i + 1);
 
-		//this->enemys[i]->update(L, dt, i + 1);
 		playerColition(i);
-	}
-
-	//Collision
-	
+	}	
 }
 
 void EntityContainer::draw(RenderTarget &target, RenderStates states)const
 {
-	for (int i = 0; i < this->enemys2.size(); i++)
+	for (int i = 0; i < this->enemys.size(); i++)
 	{
-		target.draw(this->enemys2.at(i)->getSprite(), states);
-		//target.draw(this->enemys[i]->getSprite(), states);
+		target.draw(*this->enemys[i], states);
 	}
-	target.draw(this->player->getSprite(), states);
+
+	target.draw(this->player, states);
 }
 
 void EntityContainer::addEnemy(lua_State* L, float x, float y)
@@ -57,20 +64,20 @@ void EntityContainer::addEnemy(lua_State* L, float x, float y)
 	lua_pushnumber(L, y);
 	lua_pcall(L, 2, 0, 0);
 
-	//this->enemys[this->nrOf++] = new Enemy(L, x, y);
+	//this->enemys[this->nrof++] = new Enemy(L, x, y);
 
-	this->enemys2.push_back(new Enemy(L, x, y));
+	this->enemys.push_back(new Enemy(L, x, y));
 }
 
 void EntityContainer::playerColition(int i)
 {
-	if (this->player->getSprite().getGlobalBounds().intersects(this->enemys2.at(i)->getSprite().getGlobalBounds()))
+	if (this->player.getSprite().getGlobalBounds().intersects(this->enemys[i]->getSprite().getGlobalBounds()))
 	{
 		if (hpClock.getElapsedTime().asSeconds() > 1.0f)
 		{
 			hpClock.restart();
-			this->player->damageHp();
-			cout << this->player->getHp() << endl;
+			this->player.damageHp();
+			cout << this->player.getHp() << endl;
 		}
 	}
 }

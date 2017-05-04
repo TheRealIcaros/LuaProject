@@ -1,9 +1,10 @@
 #include "Player.hpp"
 
-Player::Player(lua_State* L)
+Player::Player()
 {
 	this->texturePlayer.loadFromFile("../Images/player.png");
 	this->spritePlayer.setTexture(this->texturePlayer);
+
 	this->lookDirection = 0;
 	this->spritePlayer.setTextureRect(sf::IntRect(0, 0, 16, 16));
 	this->spritePlayer.setPosition(Vector2f(0.0, 0.0));
@@ -27,7 +28,7 @@ void Player::update(lua_State* L, float dt)	//(float dt, lua_State* L)
 
 void Player::draw(RenderTarget &target, RenderStates states)const
 {
-	target.draw(spritePlayer, states);
+	target.draw(this->spritePlayer, states);
 }
 
 void Player::setSpritePosition(lua_State* L)
