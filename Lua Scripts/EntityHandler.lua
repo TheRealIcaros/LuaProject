@@ -2,12 +2,19 @@ dofile("../Lua Scripts/Vector.lua")
 dofile("../Lua Scripts/Player.lua")
 dofile("../Lua Scripts/Enemy.lua")
 
+--EntityHandler = {player1 = Player:New(), enemyContainer = {}, nrOfEnemys = 0}
+
+--function EntityHandler:New(e)
+	--e = e or {}
+	--self.__index = self
+	--setmetatable(e, self)
+	--return e
+--end
+
 function Start()
 	player1 = Player:New()
-	
 	enemyContainer = {}
 	nrOfEnemys = 0
-
 	--enemy1 = Enemy:New()
 	--enemy2 = Enemy:New()
 end

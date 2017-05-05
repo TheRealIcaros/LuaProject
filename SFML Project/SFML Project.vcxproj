@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Editor.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="EntityContainer.cpp" />
     <ClCompile Include="Game.cpp">
@@ -28,6 +29,7 @@
     <ClCompile Include="Player.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Editor.hpp" />
     <ClInclude Include="Enemy.hpp" />
     <ClInclude Include="EntityContainer.hpp" />
     <ClInclude Include="Game.hpp">

@@ -46,7 +46,7 @@ int main()
 				window.close();
 		}
 
-		g.update();
+		g.update(window);
 
 		window.clear();
 		window.draw(g);
