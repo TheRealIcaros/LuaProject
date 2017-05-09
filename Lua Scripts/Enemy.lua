@@ -45,3 +45,7 @@ end
 function Enemy:getEnemyPos()
 	return self.pos.x, self.pos.y
 end
+
+function Enemy:restart()
+	self = nil
+end

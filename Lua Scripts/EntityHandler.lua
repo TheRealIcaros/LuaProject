@@ -2,47 +2,48 @@ dofile("../Lua Scripts/Vector.lua")
 dofile("../Lua Scripts/Player.lua")
 dofile("../Lua Scripts/Enemy.lua")
 
---EntityHandler = {player1 = Player:New(), enemyContainer = {}, nrOfEnemys = 0}
+EntityHandler = {player1 = Player:New(),
+	enemyContainer = {},
+	nrOfEnemys = 0}
 
---function EntityHandler:New(e)
-	--e = e or {}
-	--self.__index = self
-	--setmetatable(e, self)
-	--return e
---end
-
-function Start()
-	player1 = Player:New()
-	enemyContainer = {}
-	nrOfEnemys = 0
-	--enemy1 = Enemy:New()
-	--enemy2 = Enemy:New()
+function EntityHandler:New(e)
+	e = e or {}
+	self.__index = self
+	setmetatable(e, self)
+	return e
 end
 
-function Update(dt)
-	player1:Update(dt)
+function EntityHandler:Start()
+	self.player1 = Player:New()
+	self.enemyContainer = {}
+	self.nrOfEnemys = 0
+end
 
-	for key, value in pairs(enemyContainer) do
-		enemyContainer[key]:Update(player1.pos, dt)
+function EntityHandler:Update(dt)
+	self.player1:Update(dt)
+
+	for key, value in pairs(self.enemyContainer) do
+		self.enemyContainer[key]:Update(self.player1.pos, dt)
 	end
-
-	--enemy1:Update(player1.pos, dt)
-	--enemy2:Update(player1.pos, dt)
 end
 
-function getPlayerPos()
-	return player1:getPlayerPos()
+function EntityHandler:getPlayerPos()
+	return self.player1:getPlayerPos()
 end
 
-function getEnemyPos(key)
-	return enemyContainer[key]:getEnemyPos()
+function EntityHandler:getEnemyPos(key)
+	return self.enemyContainer[key]:getEnemyPos()
 end
 
-function getPlayerLookDirection()
-	return player1:getPlayerLookDirection()
+function EntityHandler:getPlayerLookDirection()
+	return self.player1:getPlayerLookDirection()
 end
 
-function addEnemy(x, y)
-	enemyContainer[nrOfEnemys + 1] = Enemy:New({x = x, y = y})
-	nrOfEnemys = nrOfEnemys + 1
+function EntityHandler:addEnemy(x, y)
+	self.enemyContainer[self.nrOfEnemys + 1] = Enemy:New({x = x, y = y})
+	self.nrOfEnemys = self.nrOfEnemys + 1
+end
+
+function EntityHandler:restart()
+	self:Start()
 end

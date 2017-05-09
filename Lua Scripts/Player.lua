@@ -1,6 +1,6 @@
 dofile("../Lua Scripts/Vector.lua")
 
-Player = {pos = Vector:New({x = 15, y = 15}),
+Player = {pos = Vector:New({x = 200, y = 200}),
 			speed = 75,
 			lookDirection = 0}
 

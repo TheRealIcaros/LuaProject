@@ -17,7 +17,6 @@ EntityContainer::EntityContainer(lua_State* L)
 
 EntityContainer::~EntityContainer()
 {
-
 	for (int i = 0; i < this->enemys.size(); i++)
 	{
 		delete this->enemys[i];
@@ -38,7 +37,7 @@ void EntityContainer::operator=(const EntityContainer &originalObject)
 void EntityContainer::update(lua_State* L, float dt)
 {
 	this->player.update(L, dt);
-
+	
 	for (int i = 0; i < this->enemys.size(); i++)
 	{
 		this->enemys[i]->update(L, dt, i + 1);
@@ -85,4 +84,16 @@ void EntityContainer::playerColition(int i)
 void EntityContainer::wallColition()
 {
 
+}
+
+void EntityContainer::restart(lua_State* L)
+{
+	for (int i = 0; i < this->enemys.size(); i++)
+	{
+		delete this->enemys[i];
+	}
+	this->enemys.clear();
+
+	lua_getglobal(L, "restart");
+	lua_pcall(L, 0, 0, 0);
 }

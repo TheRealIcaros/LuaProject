@@ -27,6 +27,7 @@ public:
 	void addEnemy(lua_State* L, float x = 200, float y = 200);
 	void playerColition(int i);
 	void wallColition();
+	void restart(lua_State* L);
 };
 
 #endif // !

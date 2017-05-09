@@ -29,7 +29,7 @@ Game::Game() : edit()
 	lua_pushcfunction(this->L, Game::getCurrentState);
 	lua_setglobal(this->L, "getCurrentState");*/
 
-	int error = luaL_loadfile(this->L, "../Lua Scripts/EntityHandler.lua") || lua_pcall(this->L, 0, 1, 0);
+	int error = luaL_loadfile(this->L, "../Lua Scripts/Game.lua") || lua_pcall(this->L, 0, 1, 0);
 	if (error)
 	{
 		cout << "Error msg: " << lua_tostring(this->L, -1) << endl;
@@ -61,6 +61,10 @@ void Game::update(RenderWindow &window)
 		this->startStateOn = false;
 		this->editorStateOn = false;
 	}
+
+
+	if (Keyboard::isKeyPressed(Keyboard::R))
+		this->et.restart(this->L);
 
 	if (!this->startStateOn && !this->editorStateOn)
 	{
