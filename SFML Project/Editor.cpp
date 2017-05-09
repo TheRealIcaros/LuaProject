@@ -43,7 +43,7 @@ Editor::~Editor()
 
 }
 
-void Editor::update(RenderWindow &window)
+void Editor::update(RenderWindow &window, lua_State* L)
 {
 	this->checkMaterials(window);
 }

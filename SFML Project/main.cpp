@@ -44,6 +44,7 @@ int main()
 		{
 			if (event.type == sf::Event::Closed || Keyboard::isKeyPressed(Keyboard::Escape))
 				window.close();
+
 		}
 
 		g.update(window);

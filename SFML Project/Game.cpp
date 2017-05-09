@@ -70,6 +70,7 @@ void Game::update(RenderWindow &window)
 			{
 				cout << "Entering Game State" << endl;
 				this->startStateOn = true;
+				this->dt.restart();
 			}
 			if (this->editor.getGlobalBounds().contains(window.mapPixelToCoords(Mouse::getPosition(window))))
 			{
@@ -90,7 +91,7 @@ void Game::update(RenderWindow &window)
 
 	if (this->editorStateOn)
 	{
-		this->updateEditorState(window);
+		this->updateEditorState(window, L);
 	}
 }
 
@@ -134,15 +135,12 @@ void Game::updateStartState()
 
 	this->dt.restart();
 
-	/*Vector2i pos = Mouse::getPosition(window);
-	cout << pos.x << ", " << pos.y << endl;*/
-
 	this->wasPressed = isPressed;
 }
 
-void Game::updateEditorState(RenderWindow &window)
+void Game::updateEditorState(RenderWindow &window, lua_State* L)
 {
-	this->edit.update(window);
+	this->edit.update(window, L);
 }
 
 int Game::CheckMovement(lua_State* L)

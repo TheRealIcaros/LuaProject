@@ -19,7 +19,7 @@ private:
 public:
 	Editor();
 	~Editor();
-	void update(RenderWindow &window);
+	void update(RenderWindow &window, lua_State* L);
 	void draw(RenderTarget &target, RenderStates states)const;
 
 	void checkMaterials(RenderWindow &window);

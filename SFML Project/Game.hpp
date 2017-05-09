@@ -30,9 +30,9 @@ public:
 	void update(RenderWindow &window);
 	void draw(RenderTarget &target, RenderStates states)const;
 
-	void updateEditorState(RenderWindow &window);
-
 	void updateStartState();
+
+	void updateEditorState(RenderWindow &window, lua_State* L);
 
 	static int CheckMovement(lua_State* L);
 	static int getSelectedMaterial(lua_State* L);
