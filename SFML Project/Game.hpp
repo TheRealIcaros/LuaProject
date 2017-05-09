@@ -32,12 +32,8 @@ public:
 
 	void updateStartState();
 
-	void updateEditorState(RenderWindow &window, lua_State* L);
+	void updateEditorState(RenderWindow &window);
 
 	static int CheckMovement(lua_State* L);
-	static int getSelectedMaterial(lua_State* L);
-	static int getMousePosToWindow(lua_State* L);
-	static int getCurrentState(lua_State* L);
 };
-
 #endif // !

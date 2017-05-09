@@ -36,16 +36,44 @@ Editor::Editor()
 	this->border.setOutlineThickness(-3.0f);
 
 	this->materialSelected = -1;
+
+	this->E = luaL_newstate();
+	/*int error = luaL_loadfile(this->E, "../Lua Scripts/Editor.lua") || lua_pcall(this->E, 0, 1, 0);
+	if (error)
+	{
+		cout << "Error msg: " << lua_tostring(this->E, -1) << endl;
+		lua_pop(this->E, 1);
+	}*/
+
+	Vector2i startPos = Vector2i(50, 50);
+	vector <Node*> mapRow;
+	for (int x = 0; x < 16; x++)
+	{
+		this->map.push_back(mapRow);
+		for (int y = 0; y < 16; y++)
+		{
+			this->map[x].push_back(new Node());
+			this->map[x][y]->setPosition(startPos.x + (x * 16), startPos.y + (y * 16));
+		}
+	}
 }
 
 Editor::~Editor()
 {
-
+	for (int x = 0; x < this->map.size(); x++)
+	{
+		for (int y = 0; y < 16; y++)
+		{
+			delete this->map[x][y];
+		}
+	}
+	lua_close(this->E);
 }
 
-void Editor::update(RenderWindow &window, lua_State* L)
+void Editor::update(RenderWindow &window)
 {
 	this->checkMaterials(window);
+	this->getMousePos(window);
 }
 
 void Editor::draw(RenderTarget &target, RenderStates states)const
@@ -55,6 +83,14 @@ void Editor::draw(RenderTarget &target, RenderStates states)const
 	target.draw(this->water, states);
 
 	target.draw(this->border, states);
+
+	for (int x = 0; x < 16; x++)
+	{
+		for (int y = 0; y < 16; y++)
+		{
+			target.draw(*this->map[x][y], states);
+		}
+	}
 }
 
 void Editor::checkMaterials(RenderWindow &window)
@@ -83,6 +119,28 @@ void Editor::checkMaterials(RenderWindow &window)
 			this->materialSelected = 2;
 		}
 	}
+}
+
+void Editor::getMousePos(RenderWindow &window)
+{
+	Vector2i mousePos = Mouse::getPosition(window);
+
+	bool found = false;
+	if (Mouse::isButtonPressed(Mouse::Right))
+	{
+		for (int x = 0; x < 16; x++ && !found)
+		{
+			for (int y = 0; y < 16; y++ && !found)
+			{
+				if (this->map[x][y]->getSprite().getGlobalBounds().contains(window.mapPixelToCoords(Mouse::getPosition(window))))
+				{
+					this->map[x][y]->setMaterial(this->materialSelected);
+					found = true;
+				}
+			}
+		}
+	}
+
 }
 
 int Editor::getMaterialSelected()

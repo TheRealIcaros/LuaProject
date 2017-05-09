@@ -1,22 +1,15 @@
-dofile("../Lua Scripts/Editor.lua")
 dofile("../Lua Scripts/EntityHandler.lua")
 
 function Start()
 	startStateOn = true
-	editorStateOn = false
+	--editorStateOn = false
 
 	entityHandler = EntityHandler:New()
-	editor = Editor:New()
 end
 
 function Update(dt)
 
-	if (startStateOn) then
-		entityHandler:Update(dt)
-	end
-	if (editorStateOn) then
-		editor:Update(dt)
-	end
+	entityHandler:Update(dt)
 
 end
 

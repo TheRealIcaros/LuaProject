@@ -95,7 +95,7 @@ void Game::update(RenderWindow &window)
 
 	if (this->editorStateOn)
 	{
-		this->updateEditorState(window, L);
+		this->updateEditorState(window);
 	}
 }
 
@@ -142,9 +142,9 @@ void Game::updateStartState()
 	this->wasPressed = isPressed;
 }
 
-void Game::updateEditorState(RenderWindow &window, lua_State* L)
+void Game::updateEditorState(RenderWindow &window)
 {
-	this->edit.update(window, L);
+	this->edit.update(window);
 }
 
 int Game::CheckMovement(lua_State* L)
@@ -190,33 +190,33 @@ int Game::CheckMovement(lua_State* L)
 	}
 }
 
-int Game::getSelectedMaterial(lua_State* L)
-{
-	/*if (this->edit.getMaterialSelected != -1)
-	{
-		lua_pushinteger(L, this->edit.getMaterialSelected);
-		return 1;
-	}
-	else*/
-		return 0;
-}
-
-int Game::getMousePosToWindow(lua_State* L)
-{
-	if (Mouse::isButtonPressed(Mouse::Left))
-	{
-		Vector2i pos = Mouse::getPosition();
-
-		lua_pushinteger(L, pos.x);
-		lua_pushinteger(L, pos.y);
-
-		return 2;
-	}
-	else
-		return 0;
-}
-
-int Game::getCurrentState(lua_State* L)
-{
-	return 0;
-}
+//int Game::getSelectedMaterial(lua_State* L)
+//{
+//	/*if (this->edit.getMaterialSelected != -1)
+//	{
+//		lua_pushinteger(L, this->edit.getMaterialSelected);
+//		return 1;
+//	}
+//	else*/
+//		return 0;
+//}
+//
+//int Game::getMousePosToWindow(lua_State* L)
+//{
+//	if (Mouse::isButtonPressed(Mouse::Left))
+//	{
+//		Vector2i pos = Mouse::getPosition();
+//
+//		lua_pushinteger(L, pos.x);
+//		lua_pushinteger(L, pos.y);
+//
+//		return 2;
+//	}
+//	else
+//		return 0;
+//}
+//
+//int Game::getCurrentState(lua_State* L)
+//{
+//	return 0;
+//}

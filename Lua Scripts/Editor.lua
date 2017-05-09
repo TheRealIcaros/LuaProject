@@ -17,9 +17,9 @@ function Editor:Start()
 		self.nodeList[i] = {}
 	end
 
-	for i = 1, self.size.x do
-		for j = 1, self.size.y do
-			self.nodeList[i][j] = Node:New()
+	for x = 1, self.size.x do
+		for y = 1, self.size.y do
+			self.nodeList[x][y] = Node:New()
 		end
 	end
 end

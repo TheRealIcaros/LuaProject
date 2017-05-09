@@ -1,6 +1,8 @@
 #ifndef EDITOR_HPP
 #define EDITOR_HPP
 
+#include "Node.hpp"
+
 #include "Include.h"
 
 class Editor : public Drawable
@@ -16,13 +18,19 @@ private:
 
 	int materialSelected;
 
+	lua_State* E;
+
+	//vector<Enemy*>
+	vector<vector <Node*>> map;
+
 public:
 	Editor();
 	~Editor();
-	void update(RenderWindow &window, lua_State* L);
+	void update(RenderWindow &window);
 	void draw(RenderTarget &target, RenderStates states)const;
 
 	void checkMaterials(RenderWindow &window);
+	void getMousePos(RenderWindow &window);
 
 	int getMaterialSelected();
 };
