@@ -38,22 +38,23 @@ Editor::Editor()
 	this->materialSelected = -1;
 
 	this->E = luaL_newstate();
-	/*int error = luaL_loadfile(this->E, "../Lua Scripts/Editor.lua") || lua_pcall(this->E, 0, 1, 0);
+	luaL_openlibs(this->E);
+	int error = luaL_loadfile(this->E, "../Lua Scripts/Editor.lua") || lua_pcall(this->E, 0, 0, 0);
 	if (error)
 	{
 		cout << "Error msg: " << lua_tostring(this->E, -1) << endl;
 		lua_pop(this->E, 1);
-	}*/
+	}
 
 	Vector2i startPos = Vector2i(50, 50);
-	vector <Node*> mapRow;
+	vector <Sprite*> mapRow;
 	for (int x = 0; x < 16; x++)
 	{
 		this->map.push_back(mapRow);
 		for (int y = 0; y < 16; y++)
 		{
-			this->map[x].push_back(new Node());
-			this->map[x][y]->setPosition(startPos.x + (x * 16), startPos.y + (y * 16));
+			this->map[x].push_back(new Sprite());
+			//this->map[x][y]->setPosition(startPos.x + (x * 16), startPos.y + (y * 16));
 		}
 	}
 }
@@ -66,7 +67,12 @@ Editor::~Editor()
 		{
 			delete this->map[x][y];
 		}
+
+		this->map[x].clear();
 	}
+	this->map.clear();
+	
+
 	lua_close(this->E);
 }
 
@@ -132,9 +138,16 @@ void Editor::getMousePos(RenderWindow &window)
 		{
 			for (int y = 0; y < 16; y++ && !found)
 			{
-				if (this->map[x][y]->getSprite().getGlobalBounds().contains(window.mapPixelToCoords(Mouse::getPosition(window))))
+				if (this->map[x][y]->getGlobalBounds().contains(window.mapPixelToCoords(Mouse::getPosition(window))))
 				{
-					this->map[x][y]->setMaterial(this->materialSelected);
+					//this->map[x][y]->setMaterial(this->materialSelected);
+
+					lua_getglobal(this->E, "setMaterial");
+					lua_pushinteger(this->E, x);
+					lua_pushinteger(this->E, y);
+					lua_pushinteger(this->E, this->materialSelected);
+					lua_pcall(this->E, 3, 0, 0);
+
 					found = true;
 				}
 			}

@@ -2,7 +2,8 @@ dofile("../Lua Scripts/Node.lua")
 dofile("../Lua Scripts/Vector.lua")
 
 Editor = {size = Vector:New({x = 16, y = 16}),
-			nodeList = {}}
+			nodeList = {},
+			startPos = Vector:New({x = 0, y = 0})}
 
 function Editor:New(e)
 	e = e or {}
@@ -25,15 +26,23 @@ function Editor:Start()
 end
 
 function Editor:Update(dt)
-	nodeTypeSelected = CheckEditorInput()
+	
+end
 
-	local pos = Vector:New()
-	pos.x, pos.y = MousePosition()
+function Editor:setStartPosition(x, y)
+	self.startPos.x = x
+	self.startPos.y = y
+end
 
-	if (pos.x > -1) then
-		pos.x = pos.x % self.size.x
-		pos.y = pos.y % self.size.y
 
-		self.nodeList[pos.x][pos.y].setNodeType(nodeTypeSelected)
-	end
+function Editor:setPostion(x, y)
+	self.nodeList[x + 1][y + 1]:setPosition(x, y)
+end
+
+function Editor:addNode(x, y)
+
+end
+
+function Editor:setMaterial(x, y, material)
+	self.nodeList[x + 1][y + 1]:setMaterial(material)
 end

@@ -21,7 +21,7 @@ private:
 	lua_State* E;
 
 	//vector<Enemy*>
-	vector<vector <Node*>> map;
+	vector<vector <Sprite*>> map;
 
 public:
 	Editor();

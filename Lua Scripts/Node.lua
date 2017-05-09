@@ -1,7 +1,7 @@
 dofile("../Lua Scripts/Vector.lua")
 
 Node = {pos = Vector:New(),
-		type = 0}
+		material = 0}
 
 function Node:New(n)
 	n = n or {}
@@ -10,21 +10,19 @@ function Node:New(n)
 	return n
 end
 
-function Node:setNodePosition(x, y)
+function Node:getMaterial()
+	return self.material
+end
+
+function Node:setPosition(x, y)
 	self.pos.x = x
 	self.pos.y = y
 end
 
-function Node:getNodePosition()
-	return self.pos
+function Node:getPosition()
+	return self.pos.x, self.pos.y
 end
 
-function Node:setNodeType(t)
-	self.type = t
+function Node:setMaterial(material)
+	self.material = material
 end
-
-function Node:getNodeType()
-	return self.type
-end
-
-
