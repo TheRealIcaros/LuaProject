@@ -29,12 +29,32 @@ Editor::Editor()
 	this->water.setTextureRect(sf::IntRect(0, 0, 16, 16));
 	this->water.scale(2.0f, 2.0f);
 
+	if (!this->spawnEnemyTexture.loadFromFile("../Images/spawnpoint.png"))
+	{
+		cout << "Spawnpoint enemy image not found!" << endl;
+	}
+	this->spawnEnemy.setTexture(this->spawnEnemyTexture);
+	this->spawnEnemy.setPosition(96.0f, 0.0f);
+	this->spawnEnemy.setTextureRect(sf::IntRect(0, 0, 16, 16));
+	this->spawnEnemy.scale(2.0f, 2.0f);
+
+	if (!this->spawnPlayerTexture.loadFromFile("../Images/playerspawn.png"))
+	{
+		cout << "Spawnpoint player image not found!" << endl;
+	}
+	this->spawnPlayer.setTexture(this->spawnPlayerTexture);
+	this->spawnPlayer.setPosition(128.0f, 0.0f);
+	this->spawnPlayer.setTextureRect(sf::IntRect(0, 0, 16, 16));
+	this->spawnPlayer.scale(2.0f, 2.0f);
+
+	//Border
 	this->border.setSize(Vector2f(32.0f, 32.0f));
 	this->border.setPosition(Vector2f(-32.0f, 0.0f));
 	this->border.setFillColor(Color::Transparent);
 	this->border.setOutlineColor(Color::Blue);
 	this->border.setOutlineThickness(-3.0f);
 
+	//Save, Load and New Map Button
 	this->saveButton.setSize(Vector2f(32, 32));
 	this->saveButton.setPosition(Vector2f(768, 0));
 	this->saveButton.setFillColor(Color::Yellow);
@@ -46,6 +66,20 @@ Editor::Editor()
 	this->newButton.setSize(Vector2f(32, 32));
 	this->newButton.setPosition(Vector2f(704, 0));
 	this->newButton.setFillColor(Color::Red);
+
+
+	//Resize Map Buttons
+	this->smallButton.setSize(Vector2f(32, 32));
+	this->smallButton.setPosition(Vector2f(400, 0));
+	this->smallButton.setFillColor(Color::Green);
+
+	this->mediumButton.setSize(Vector2f(32, 32));
+	this->mediumButton.setPosition(Vector2f(432, 0));
+	this->mediumButton.setFillColor(Color::Yellow);
+
+	this->largeButton.setSize(Vector2f(32, 32));
+	this->largeButton.setPosition(Vector2f(464, 0));
+	this->largeButton.setFillColor(Color::Red);
 
 	this->materialSelected = -1;
 
@@ -60,22 +94,7 @@ Editor::Editor()
 
 	lua_getglobal(E, "Start");
 	lua_pcall(this->E, 0, 0, 0);
-	//this->sizeXY = 16;
-
-	while (!(this->sizeXY == 16 || this->sizeXY == 32 || this->sizeXY == 46))
-	{
-		cout << "Select a map size [16, 32, 46]: ";
-		cin >> this->sizeXY;
-		cout << endl;
-	}
-	lua_getglobal(this->E, "setMapSize");
-	lua_pushinteger(this->E, this->sizeXY);
-	error = lua_pcall(this->E, 1, 0, 0);
-	if (error)
-	{
-		cout << "MapSize Error msg: " << lua_tostring(this->E, -1) << endl;
-		lua_pop(this->E, 1);
-	}
+	this->sizeXY = 16;
 
 	reloadVectors();
 }
@@ -96,6 +115,8 @@ void Editor::update(RenderWindow &window)
 	this->saveOnFile(this->E, window);
 	this->loadFromFile(this->E, window);
 	this->newMap(this->E, window);
+
+	this->changeMapSize(E, window);
 }
 
 void Editor::draw(RenderTarget &target, RenderStates states)const
@@ -103,11 +124,17 @@ void Editor::draw(RenderTarget &target, RenderStates states)const
 	target.draw(this->grass, states);
 	target.draw(this->wall, states);
 	target.draw(this->water, states);
+	target.draw(this->spawnEnemy, states);
+	target.draw(this->spawnPlayer, states);
 
 	target.draw(this->border, states);
 	target.draw(this->saveButton, states);
 	target.draw(this->loadButton, states);
 	target.draw(this->newButton, states);
+
+	target.draw(this->smallButton, states);
+	target.draw(this->mediumButton, states);
+	target.draw(this->largeButton, states);
 
 	for (int y = 0; y < this->map.size(); y++)
 	{
@@ -122,6 +149,7 @@ void Editor::checkMaterials(RenderWindow &window)
 {
 	if (Mouse::isButtonPressed(Mouse::Left))
 	{
+		system("CLS");
 		if (this->grass.getGlobalBounds().contains(window.mapPixelToCoords(Mouse::getPosition(window))) && this->materialSelected != 0)
 		{
 			this->border.setPosition(0.0f, 0.0f);
@@ -142,6 +170,20 @@ void Editor::checkMaterials(RenderWindow &window)
 
 			cout << "Water Selected" << endl;
 			this->materialSelected = 2;
+		}
+		if (this->spawnEnemy.getGlobalBounds().contains(window.mapPixelToCoords(Mouse::getPosition(window))) && this->materialSelected != 3)
+		{
+			this->border.setPosition(96.0f, 0.0f);
+
+			cout << "Spawn Enemy Selected" << endl;
+			this->materialSelected = 3;
+		}
+		if (this->spawnPlayer.getGlobalBounds().contains(window.mapPixelToCoords(Mouse::getPosition(window))) && this->materialSelected != 4)
+		{
+			this->border.setPosition(128.0f, 0.0f);
+
+			cout << "Spawn Player Selected" << endl;
+			this->materialSelected = 4;
 		}
 	}
 }
@@ -176,6 +218,12 @@ void Editor::getMousePos(RenderWindow &window)
 					case 2:
 						this->map[y][x]->setTexture(this->waterTexture);
 						break;
+					case 3:
+						this->map[y][x]->setTexture(this->spawnEnemyTexture);
+						break;
+					case 4:
+						this->map[y][x]->setTexture(this->spawnPlayerTexture);
+						break;
 					}
 
 					found = true;
@@ -195,18 +243,37 @@ void Editor::saveOnFile(lua_State* E, RenderWindow &window)
 {
 	if (Mouse::isButtonPressed(Mouse::Left) && this->saveButton.getGlobalBounds().contains(window.mapPixelToCoords(Mouse::getPosition(window))))
 	{
-		cout << "Write a name on the map: ";
-		string input;
-		cin >> input;
-		cout << endl;
-
-		lua_getglobal(E, "printToTxt");
-		lua_pushstring(E, input.c_str());
-		int error = lua_pcall(E, 1, 0, 0);
-		if (error)
+		int found = 0;
+		for (int y = 0; y < this->map.size(); y++ && found <= 1)
 		{
-			cout << "Save Error msg: " << lua_tostring(this->E, -1) << endl;
-			lua_pop(this->E, 1);
+			for (int x = 0; x < this->map[y].size(); x++ && found <= 1)
+			{
+				if (this->map[x][y]->getTexture() == &this->spawnPlayerTexture)
+				{
+					found++;
+				}
+			}
+		}
+
+		if (found >= 2)
+		{
+			cout << "To many player spawns [Blue Spawn Point]. Only 1 works." << endl;
+		}
+		else
+		{
+			cout << "Write a name on the map: ";
+			string input;
+			cin >> input;
+			cout << endl;
+
+			lua_getglobal(E, "printToTxt");
+			lua_pushstring(E, input.c_str());
+			int error = lua_pcall(E, 1, 0, 0);
+			if (error)
+			{
+				cout << "Save Error msg: " << lua_tostring(this->E, -1) << endl;
+				lua_pop(this->E, 1);
+			}
 		}
 	}
 }
@@ -272,6 +339,12 @@ void Editor::reloadSprites(lua_State* E)
 			case 2:
 				this->map[y][x]->setTexture(this->waterTexture);
 				break;
+			case 3:
+				this->map[y][x]->setTexture(this->spawnEnemyTexture);
+				break;
+			case 4:
+				this->map[y][x]->setTexture(this->spawnPlayerTexture);
+				break;
 			}
 		}
 	}
@@ -314,4 +387,32 @@ void Editor::newMap(lua_State* E, RenderWindow &window)
 		clearVector();
 		reloadVectors();
 	}
+}
+
+void Editor::changeMapSize(lua_State* E, RenderWindow &window)
+{
+	if (Mouse::isButtonPressed(Mouse::Left) && this->smallButton.getGlobalBounds().contains(window.mapPixelToCoords(Mouse::getPosition(window))))
+	{
+		setMapSize(E, 16);
+	}
+	else if (Mouse::isButtonPressed(Mouse::Left) && this->mediumButton.getGlobalBounds().contains(window.mapPixelToCoords(Mouse::getPosition(window))))
+	{
+		setMapSize(E, 32);
+	}
+	else if (Mouse::isButtonPressed(Mouse::Left) && this->largeButton.getGlobalBounds().contains(window.mapPixelToCoords(Mouse::getPosition(window))))
+	{
+		setMapSize(E, 46);
+	}
+}
+
+void Editor::setMapSize(lua_State* E, int size)
+{
+	lua_getglobal(E, "setMapSize");
+	lua_pushinteger(E, size);
+	lua_pcall(E, 1, 0, 0);
+
+	this->sizeXY = size;
+
+	clearVector();
+	reloadVectors();
 }

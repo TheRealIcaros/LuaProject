@@ -14,11 +14,19 @@ private:
 	Sprite wall;
 	Texture waterTexture;
 	Sprite water;
+	Texture spawnEnemyTexture;
+	Sprite spawnEnemy;
+	Texture spawnPlayerTexture;
+	Sprite spawnPlayer;
 	RectangleShape border;
 
 	RectangleShape saveButton;
 	RectangleShape loadButton;
 	RectangleShape newButton;
+
+	RectangleShape smallButton;
+	RectangleShape mediumButton;
+	RectangleShape largeButton;
 
 	int materialSelected;
 
@@ -47,6 +55,9 @@ public:
 	void reloadVectors();
 	void clearVector();
 	void newMap(lua_State* E, RenderWindow &window);
+
+	void changeMapSize(lua_State* E, RenderWindow &window);
+	void setMapSize(lua_State* E, int size);
 };
 
 #endif // !
