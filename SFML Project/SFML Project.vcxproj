@@ -26,6 +26,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Map.cpp" />
     <ClCompile Include="Node.cpp" />
     <ClCompile Include="Player.cpp" />
   </ItemGroup>
@@ -37,6 +38,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="Include.h" />
+    <ClInclude Include="Map.hpp" />
     <ClInclude Include="Node.hpp" />
     <ClInclude Include="Player.hpp" />
   </ItemGroup>
@@ -45,6 +47,7 @@
     <None Include="..\Lua Scripts\Enemy.lua" />
     <None Include="..\Lua Scripts\EntityHandler.lua" />
     <None Include="..\Lua Scripts\Game.lua" />
+    <None Include="..\Lua Scripts\Map.lua" />
     <None Include="..\Lua Scripts\Node.lua" />
     <None Include="..\Lua Scripts\Player.lua" />
     <None Include="..\Lua Scripts\Vector.lua" />

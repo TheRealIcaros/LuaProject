@@ -39,6 +39,9 @@
     <ClCompile Include="Node.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Map.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Player.hpp">
@@ -62,6 +65,9 @@
     <ClInclude Include="Node.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Map.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Lua Scripts\Enemy.lua">
@@ -83,6 +89,9 @@
       <Filter>Lua</Filter>
     </None>
     <None Include="..\Lua Scripts\Node.lua">
+      <Filter>Lua</Filter>
+    </None>
+    <None Include="..\Lua Scripts\Map.lua">
       <Filter>Lua</Filter>
     </None>
   </ItemGroup>

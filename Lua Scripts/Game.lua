@@ -1,10 +1,13 @@
 dofile("../Lua Scripts/EntityHandler.lua")
+dofile("../Lua Scripts/Map.lua")
 
 function Start()
 	startStateOn = true
 	--editorStateOn = false
 
 	entityHandler = EntityHandler:New()
+
+	map = Map:New()
 end
 
 function Update(dt)
@@ -32,4 +35,16 @@ end
 
 function restart()
 	entityHandler:restart()
+end
+
+function loadFromFile(name)
+	return map:loadFromFile(name)
+end
+
+function getMaterial(x, y)
+	return map:getMaterial(x, y)
+end
+
+function getMapSize()
+	return map:getMapSize()
 end

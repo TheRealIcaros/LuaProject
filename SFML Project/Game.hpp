@@ -4,6 +4,7 @@
 #include "Include.h"
 #include "Editor.hpp"
 #include "EntityContainer.hpp"
+#include "Map.hpp"
 
 class Game : public Drawable
 {
@@ -16,6 +17,7 @@ private:
 	EntityContainer et;
 	Clock dt;
 	Editor edit;
+	Map map;
 
 	//int lookDirection;
 	bool wasPressed;

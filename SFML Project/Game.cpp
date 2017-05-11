@@ -40,6 +40,7 @@ Game::Game() : edit()
 	lua_pcall(this->L, 0, 0, 0);
 
 	this->et = EntityContainer(this->L);
+	this->map = Map();
 
 	this->wasPressed = false;
 	this->selectedBlock = 0;
@@ -75,6 +76,8 @@ void Game::update(RenderWindow &window)
 				cout << "Entering Game State" << endl;
 				this->startStateOn = true;
 				this->dt.restart();
+
+				map.loadFromFile(L, window);
 			}
 			if (this->editor.getGlobalBounds().contains(window.mapPixelToCoords(Mouse::getPosition(window))))
 			{
@@ -110,6 +113,7 @@ void Game::draw(RenderTarget &target, RenderStates states)const
 
 	if (this->startStateOn)
 	{
+		target.draw(this->map, states);
 		target.draw(this->et, states);
 	}
 
