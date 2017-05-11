@@ -17,6 +17,8 @@ private:
 	RectangleShape border;
 
 	RectangleShape saveButton;
+	RectangleShape loadButton;
+	RectangleShape newButton;
 
 	int materialSelected;
 
@@ -38,7 +40,13 @@ public:
 
 	int getMaterialSelected();
 
-	void saveOnFile(lua_State* L, RenderWindow &window);
+	void saveOnFile(lua_State* E, RenderWindow &window);
+	void loadFromFile(lua_State* E, RenderWindow &window);
+
+	void reloadSprites(lua_State* E);
+	void reloadVectors();
+	void clearVector();
+	void newMap(lua_State* E, RenderWindow &window);
 };
 
 #endif // !

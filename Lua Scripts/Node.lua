@@ -1,12 +1,11 @@
 dofile("../Lua Scripts/Vector.lua")
 
-Node = {pos = Vector:New(),
-		material = 0}
+Node = {pos = Vector:New(), material = 0}
 
 function Node:New(n)
 	n = n or {}
 	self.__index = self
-	setmetatable(e, self)
+	setmetatable(n, self)
 	return n
 end
 

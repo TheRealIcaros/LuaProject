@@ -1,74 +1,103 @@
 dofile("../Lua Scripts/Node.lua")
 dofile("../Lua Scripts/Vector.lua")
 
-Editor = {size = 16,
-			nodeList = {},
-			startPos = Vector:New({x = 0, y = 0})}
-
-function Editor:New(e)
-	e = e or {}
-	self.__index = self
-	setmetatable(e, self)
-	return e
-end
+--Editor = {size = 16,
+			--nodeList = {},
+			--startPos = Vector:New({x = 0, y = 0})}
 
 --Logic
-function Editor:Start()
-	Editor =  Editor:New()
-	for i = 1, self.size do
-		self.nodeList[i] = {}
+
+editor = {}
+
+function Start()
+	editor = {size = 16, nodeList = {}, startPos = Vector:New({x = 0, y = 0})}
+
+	for i = 1, editor.size do
+		editor.nodeList[i] = {}
 	end
 
-	for y = 1, self.size do
-		for x = 1, self.size do
-			self.nodeList[x][y] = Node:New()
+	for y = 1, editor.size do
+		for x = 1, editor.size do
+			editor.nodeList[y][x] = Node:New()
 		end
 	end
 end
 
-function Editor:Update(dt)
+function Update(dt)
 	
 end
 
-function Editor:setStartPosition(x, y)
-	self.startPos.x = x
-	self.startPos.y = y
+function setStartPosition(x, y)
+	editor.startPos.x = x
+	editor.startPos.y = y
 end
 
-
-function Editor:setPostion(x, y)
-	self.nodeList[x + 1][y + 1]:setPosition(x, y)
+function setPostion(x, y)
+	editor.nodeList[x + 1][y + 1]:setPosition(x, y)
 end
 
-function Editor:addNode(x, y)
+function addNode(x, y)
 
 end
 
-function Editor:setMaterial(x, y, material)
-	self.nodeList[x + 1][y + 1]:setMaterial(material)
+function setMaterial(x, y, material)
+	editor.nodeList[x + 1][y + 1]:setMaterial(material)
 end
 
-function Editor:printToTxt(name)
+function getMaterial(x, y)
+	return editor.nodeList[x + 1][y + 1]:getMaterial()
+end
+
+function printToTxt(name)
 --function Editor.printToTxt(self, name)
-	file = io.open("..\\Map\\" .. name .. ".txt", "w")
-
-	for y = 1, Editor.size do
-		for x = 1, Editor.size do
-		print(self.nodeList[x][y]:getMaterial())
-			output = output .. Editor.nodeList[x][y]:getMaterial()
+	local file = io.open("..\\Map\\" .. name .. ".txt", "w")
+	
+	file:write(editor.size, "\n")
+	for y = 1, editor.size do
+		for x = 1, editor.size do
+			file:write(editor.nodeList[x][y]:getMaterial())
 		end
-		print(output)
-		file:write(output, "\n")
-		output = ""
+		file:write("\n")
 	end
 
 	file:close()
+	print("The map size is: " .. editor.size .. "x" .. editor.size .. "\nThe name of the map is: " .. name .. ".txt" .. " \nAnd is saved in Map folder")
 end
 
 function setMapSize(s)
-	Editor.size = s
+	editor.size = s
+	resetTables()
 end
 
 function getMapSize()
-	return Editor.size
+	return editor.size
+end
+
+function resetTables()
+	for i = 1, editor.size do
+		editor.nodeList[i] = {}
+	end
+
+	for y = 1, editor.size do
+		for x = 1, editor.size do
+			editor.nodeList[x][y] = Node:New()
+		end
+	end
+end
+
+function loadFromFile(name)
+	print(name)
+	local file = io.open("..\\Map\\" .. name .. ".txt", "r")
+	io.input(file)
+	
+	editor.size = tonumber(io.read())
+	resetTables()
+
+	for y = 1, editor.size do
+		local temp = io.read()
+		for x = 1, editor.size do
+			local c = temp:sub(x, x)
+			editor.nodeList[x][y]:setMaterial(tonumber(c))
+		end
+	end
 end
