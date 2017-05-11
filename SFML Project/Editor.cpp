@@ -35,6 +35,10 @@ Editor::Editor()
 	this->border.setOutlineColor(Color::Blue);
 	this->border.setOutlineThickness(-3.0f);
 
+	this->saveButton.setSize(Vector2f(32, 32));
+	this->saveButton.setPosition(Vector2f(768, 0));
+	this->saveButton.setFillColor(Color::Yellow);
+
 	this->materialSelected = -1;
 
 	this->E = luaL_newstate();
@@ -42,33 +46,54 @@ Editor::Editor()
 	int error = luaL_loadfile(this->E, "../Lua Scripts/Editor.lua") || lua_pcall(this->E, 0, 0, 0);
 	if (error)
 	{
-		cout << "Error msg: " << lua_tostring(this->E, -1) << endl;
+		cout << "Editor Load Error msg: " << lua_tostring(this->E, -1) << endl;
 		lua_pop(this->E, 1);
 	}
 
-	Vector2i startPos = Vector2i(50, 50);
+	lua_getglobal(E, "Start");
+	lua_pcall(this->E, 0, 0, 0);
+
+	this->sizeXY = 16;
+
+	//while (!(this->sizeXY == 16 || this->sizeXY == 32 || this->sizeXY == 46))
+	//{
+	//	cout << "Select a map size [16, 32, 46]: ";
+	//	cin >> this->sizeXY;
+	//	cout << endl;
+	//}
+	//lua_getglobal(this->E, "setMapSize");
+	//lua_pushinteger(this->E, this->sizeXY);
+	//error = lua_pcall(this->E, 1, 0, 0);
+	//if (error)
+	//{
+	//	cout << "MapSize Error msg: " << lua_tostring(this->E, -1) << endl;
+	//	lua_pop(this->E, 1);
+	//}
+
+	Vector2i startPos = Vector2i(32, 32);
 	vector <Sprite*> mapRow;
-	for (int x = 0; x < 16; x++)
+	for (int y = 0; y < sizeXY; y++)
 	{
 		this->map.push_back(mapRow);
-		for (int y = 0; y < 16; y++)
+		for (int x = 0; x < sizeXY; x++)
 		{
-			this->map[x].push_back(new Sprite());
-			//this->map[x][y]->setPosition(startPos.x + (x * 16), startPos.y + (y * 16));
+			this->map[y].push_back(new Sprite());
+			this->map[y][x]->setTexture(this->grassTexture);
+			this->map[y][x]->setPosition(startPos.x + (x * 16), startPos.y + (y * 16));
 		}
 	}
 }
 
 Editor::~Editor()
 {
-	for (int x = 0; x < this->map.size(); x++)
+	for (int y = 0; y < this->map.size(); y++)
 	{
-		for (int y = 0; y < 16; y++)
+		for (int x = 0; x < this->map[y].size(); x++)
 		{
-			delete this->map[x][y];
+			delete this->map[y][x];
 		}
 
-		this->map[x].clear();
+		this->map[y].clear();
 	}
 	this->map.clear();
 	
@@ -80,6 +105,8 @@ void Editor::update(RenderWindow &window)
 {
 	this->checkMaterials(window);
 	this->getMousePos(window);
+
+	this->saveOnFile(this->E, window);
 }
 
 void Editor::draw(RenderTarget &target, RenderStates states)const
@@ -89,12 +116,13 @@ void Editor::draw(RenderTarget &target, RenderStates states)const
 	target.draw(this->water, states);
 
 	target.draw(this->border, states);
+	target.draw(this->saveButton, states);
 
-	for (int x = 0; x < 16; x++)
+	for (int y = 0; y < this->map.size(); y++)
 	{
-		for (int y = 0; y < 16; y++)
+		for (int x = 0; x < this->map[y].size(); x++)
 		{
-			target.draw(*this->map[x][y], states);
+			target.draw(*this->map[y][x], states);
 		}
 	}
 }
@@ -134,19 +162,30 @@ void Editor::getMousePos(RenderWindow &window)
 	bool found = false;
 	if (Mouse::isButtonPressed(Mouse::Right))
 	{
-		for (int x = 0; x < 16; x++ && !found)
+		for (int y = 0; y < this->map.size(); y++ && !found)
 		{
-			for (int y = 0; y < 16; y++ && !found)
+			for (int x = 0; x < this->map[y].size(); x++ && !found)
 			{
-				if (this->map[x][y]->getGlobalBounds().contains(window.mapPixelToCoords(Mouse::getPosition(window))))
+				if (this->map[y][x]->getGlobalBounds().contains(window.mapPixelToCoords(Mouse::getPosition(window))))
 				{
-					//this->map[x][y]->setMaterial(this->materialSelected);
-
 					lua_getglobal(this->E, "setMaterial");
 					lua_pushinteger(this->E, x);
 					lua_pushinteger(this->E, y);
 					lua_pushinteger(this->E, this->materialSelected);
 					lua_pcall(this->E, 3, 0, 0);
+
+					switch (this->materialSelected)
+					{
+					case 0:
+						this->map[y][x]->setTexture(this->grassTexture);
+						break;
+					case 1:
+						this->map[y][x]->setTexture(this->wallTexture);
+						break;
+					case 2:
+						this->map[y][x]->setTexture(this->waterTexture);
+						break;
+					}
 
 					found = true;
 				}
@@ -159,4 +198,24 @@ void Editor::getMousePos(RenderWindow &window)
 int Editor::getMaterialSelected()
 {
 	return this->materialSelected;
+}
+
+void Editor::saveOnFile(lua_State* E, RenderWindow &window)
+{
+	if (Mouse::isButtonPressed(Mouse::Left) && this->saveButton.getGlobalBounds().contains(window.mapPixelToCoords(Mouse::getPosition(window))))
+	{
+		cout << "Write a name on the map: ";
+		string input;
+		cin >> input;
+		cout << endl;
+
+		lua_getglobal(E, "printToTxt");
+		lua_pushstring(E, input.c_str());
+		int error = lua_pcall(E, 1, 0, 0);
+		if (error)
+		{
+			cout << "Save Error msg: " << lua_tostring(this->E, -1) << endl;
+			lua_pop(this->E, 1);
+		}
+	}
 }

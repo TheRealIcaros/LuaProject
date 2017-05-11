@@ -3,15 +3,15 @@
 Game::Game() : edit()
 {
 	this->start.setSize(Vector2f(200.0f, 50.0f));
-	this->start.setPosition(Vector2f(100.0f, 75.0f));
+	this->start.setPosition(Vector2f(300.0f, 75.0f));
 	this->start.setFillColor(Color::Green);
 
 	this->editor.setSize(Vector2f(200.0f, 50.0f));
-	this->editor.setPosition(Vector2f(100.0f, 175.0f));
+	this->editor.setPosition(Vector2f(300.0f, 175.0f));
 	this->editor.setFillColor(Color::Yellow);
 
 	this->exit.setSize(Vector2f(200.0f, 50.0f));
-	this->exit.setPosition(Vector2f(100.0f, 275.0f));
+	this->exit.setPosition(Vector2f(300.0f, 275.0f));
 	this->exit.setFillColor(Color::Red);
 
 	this->L = luaL_newstate();

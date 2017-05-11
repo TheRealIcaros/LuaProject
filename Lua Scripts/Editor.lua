@@ -1,7 +1,7 @@
 dofile("../Lua Scripts/Node.lua")
 dofile("../Lua Scripts/Vector.lua")
 
-Editor = {size = Vector:New({x = 16, y = 16}),
+Editor = {size = 16,
 			nodeList = {},
 			startPos = Vector:New({x = 0, y = 0})}
 
@@ -14,12 +14,13 @@ end
 
 --Logic
 function Editor:Start()
-	for i = 1, self.size.x do
+	Editor =  Editor:New()
+	for i = 1, self.size do
 		self.nodeList[i] = {}
 	end
 
-	for x = 1, self.size.x do
-		for y = 1, self.size.y do
+	for y = 1, self.size do
+		for x = 1, self.size do
 			self.nodeList[x][y] = Node:New()
 		end
 	end
@@ -45,4 +46,29 @@ end
 
 function Editor:setMaterial(x, y, material)
 	self.nodeList[x + 1][y + 1]:setMaterial(material)
+end
+
+function Editor:printToTxt(name)
+--function Editor.printToTxt(self, name)
+	file = io.open("..\\Map\\" .. name .. ".txt", "w")
+
+	for y = 1, Editor.size do
+		for x = 1, Editor.size do
+		print(self.nodeList[x][y]:getMaterial())
+			output = output .. Editor.nodeList[x][y]:getMaterial()
+		end
+		print(output)
+		file:write(output, "\n")
+		output = ""
+	end
+
+	file:close()
+end
+
+function setMapSize(s)
+	Editor.size = s
+end
+
+function getMapSize()
+	return Editor.size
 end

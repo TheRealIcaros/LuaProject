@@ -16,12 +16,16 @@ private:
 	Sprite water;
 	RectangleShape border;
 
+	RectangleShape saveButton;
+
 	int materialSelected;
 
 	lua_State* E;
 
 	//vector<Enemy*>
 	vector<vector <Sprite*>> map;
+
+	int sizeXY;
 
 public:
 	Editor();
@@ -33,6 +37,8 @@ public:
 	void getMousePos(RenderWindow &window);
 
 	int getMaterialSelected();
+
+	void saveOnFile(lua_State* L, RenderWindow &window);
 };
 
 #endif // !
