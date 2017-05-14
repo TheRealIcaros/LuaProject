@@ -202,10 +202,15 @@ Vector2i* Game::randomEnemySpawnPoint()
 
 	int number = distribution(generator);*/
 
-	srand(time(NULL));
-	int number = rand() % this->enemySpawnPoints.size();
+	/*srand(time(NULL));
+	//int number = rand() % this->enemySpawnPoints.size();
+	//
+	//cout << number << endl;
+	//
+	//return this->enemySpawnPoints.at(number);*/
 
-	cout << number << endl;
-
+	random_device rd;
+	uniform_int_distribution<int> uniDistribution(0, this->enemySpawnPoints.size() -1);
+	int number = uniDistribution(rd);
 	return this->enemySpawnPoints.at(number);
 }
