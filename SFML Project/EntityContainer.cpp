@@ -58,6 +58,7 @@ void EntityContainer::draw(RenderTarget &target, RenderStates states)const
 
 void EntityContainer::addEnemy(lua_State* L, float x, float y)
 {
+	cout << x << ", " << y << endl;
 	lua_getglobal(L, "addEnemy");
 	lua_pushnumber(L, x);
 	lua_pushnumber(L, y);

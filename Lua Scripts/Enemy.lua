@@ -38,8 +38,8 @@ end
 
 --Positions
 function Enemy:setEnemyPos(x, y)
-	self.pos.x = x
-	self.pos.y = y
+	self.pos.x = (x * 16) + 32
+	self.pos.y = (y * 16) + 32
 end
 
 function Enemy:getEnemyPos()

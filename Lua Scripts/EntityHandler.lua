@@ -45,6 +45,7 @@ end
 
 function EntityHandler:addEnemy(x, y)
 	self.enemyContainer[self.nrOfEnemys + 1] = Enemy:New({x = x, y = y})
+	self.enemyContainer[self.nrOfEnemys + 1]:setEnemyPos(x, y)
 	self.nrOfEnemys = self.nrOfEnemys + 1
 end
 

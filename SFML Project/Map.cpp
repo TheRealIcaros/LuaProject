@@ -190,3 +190,21 @@ bool Map::checkPlayerSpawnArea()
 	}
 	return true;
 }
+
+vector<Vector2i*> Map::findEnemySpawnPoints()
+{
+	vector<Vector2i*> enemySpawnPoints;
+	for (int y = 0; y < this->map.size(); y++)
+	{
+		for (int x = 0; x < this->map[y].size(); x++)
+		{
+			if (this->map[x][y]->getTexture() == &this->spawnEnemyTexture)
+			{
+				enemySpawnPoints.push_back(new Vector2i(y, x));
+			}
+		}
+	}
+
+	cout << enemySpawnPoints.size() << endl;
+	return enemySpawnPoints;
+}

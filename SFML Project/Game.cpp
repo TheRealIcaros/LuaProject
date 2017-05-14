@@ -42,6 +42,13 @@ Game::Game() : edit()
 
 Game::~Game()
 {
+	for (int x = 0; x < this->enemySpawnPoints.size(); x++)
+	{
+		delete this->enemySpawnPoints[x];
+	}
+
+	this->enemySpawnPoints.clear();
+
 	lua_close(this->L);
 }
 
@@ -70,6 +77,7 @@ void Game::update(RenderWindow &window)
 
 				this->playerSpawn = map.loadFromFile(L, window);
 				this->et.setPlayerSpawnPos(this->L, this->playerSpawn);
+				this->enemySpawnPoints = this->map.findEnemySpawnPoints();
 			}
 			if (this->editor.getGlobalBounds().contains(window.mapPixelToCoords(Mouse::getPosition(window))))
 			{
@@ -128,8 +136,9 @@ void Game::updateStartState()
 	bool isPressed = Keyboard::isKeyPressed(Keyboard::O);
 	if (isPressed && !this->wasPressed)
 	{
+		Vector2i* enemySpawn = randomEnemySpawnPoint();
 		this->wasPressed = true;
-		et.addEnemy(this->L);
+		et.addEnemy(this->L, enemySpawn->x, enemySpawn->y);
 	}
 	this->et.update(this->L, this->dt.getElapsedTime().asSeconds());
 
@@ -184,4 +193,19 @@ int Game::CheckMovement(lua_State* L)
 		lua_pop(L, 1);
 		return 0;
 	}
+}
+
+Vector2i* Game::randomEnemySpawnPoint()
+{
+	/*default_random_engine generator;
+	uniform_int_distribution<int> distribution(0, this->enemySpawnPoints.size());
+
+	int number = distribution(generator);*/
+
+	srand(time(NULL));
+	int number = rand() % this->enemySpawnPoints.size();
+
+	cout << number << endl;
+
+	return this->enemySpawnPoints.at(number);
 }

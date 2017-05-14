@@ -18,6 +18,7 @@ private:
 	Vector2i playerSpawn;
 	vector<vector <Sprite*>> map;
 	int sizeXY;
+
 public:
 	Map();
 	~Map();
@@ -30,5 +31,6 @@ public:
 	void reloadVectors();
 	void clearVector();
 	bool checkPlayerSpawnArea();
+	vector<Vector2i*> findEnemySpawnPoints();
 };
 #endif

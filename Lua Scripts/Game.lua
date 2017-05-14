@@ -33,8 +33,7 @@ function getPlayerLookDirection()
 end
 
 function addEnemy(x, y)
-	entityHandler.enemyContainer[entityHandler.nrOfEnemys + 1] = Enemy:New({x = x, y = y})
-	entityHandler.nrOfEnemys = entityHandler.nrOfEnemys + 1
+	entityHandler:addEnemy(x, y)
 end
 
 function restart()
