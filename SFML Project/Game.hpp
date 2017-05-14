@@ -26,6 +26,8 @@ private:
 	bool startStateOn;
 	bool editorStateOn;
 
+	Vector2i playerSpawn;
+
 public:
 	Game();
 	~Game();

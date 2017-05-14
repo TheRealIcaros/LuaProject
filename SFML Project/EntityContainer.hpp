@@ -28,6 +28,7 @@ public:
 	void playerColition(int i);
 	void wallColition();
 	void restart(lua_State* L);
+	void setPlayerSpawnPos(lua_State* L, Vector2i pos);
 };
 
 #endif // !

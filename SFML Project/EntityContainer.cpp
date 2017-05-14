@@ -97,3 +97,8 @@ void EntityContainer::restart(lua_State* L)
 	lua_getglobal(L, "restart");
 	lua_pcall(L, 0, 0, 0);
 }
+
+void EntityContainer::setPlayerSpawnPos(lua_State* L, Vector2i pos)
+{
+	this->player.setPlayerPosInLua(L, pos);
+}

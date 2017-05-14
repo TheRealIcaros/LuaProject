@@ -149,11 +149,11 @@ void Editor::checkMaterials(RenderWindow &window)
 {
 	if (Mouse::isButtonPressed(Mouse::Left))
 	{
-		system("CLS");
 		if (this->grass.getGlobalBounds().contains(window.mapPixelToCoords(Mouse::getPosition(window))) && this->materialSelected != 0)
 		{
 			this->border.setPosition(0.0f, 0.0f);
 
+			system("CLS");
 			cout << "Grass Selected" << endl;
 			this->materialSelected = 0;
 		}
@@ -161,6 +161,7 @@ void Editor::checkMaterials(RenderWindow &window)
 		{
 			this->border.setPosition(32.0f, 0.0f);
 
+			system("CLS");
 			cout << "Wall  Selected" << endl;
 			this->materialSelected = 1;
 		}
@@ -168,6 +169,7 @@ void Editor::checkMaterials(RenderWindow &window)
 		{
 			this->border.setPosition(64.0f, 0.0f);
 
+			system("CLS");
 			cout << "Water Selected" << endl;
 			this->materialSelected = 2;
 		}
@@ -175,6 +177,7 @@ void Editor::checkMaterials(RenderWindow &window)
 		{
 			this->border.setPosition(96.0f, 0.0f);
 
+			system("CLS");
 			cout << "Spawn Enemy Selected" << endl;
 			this->materialSelected = 3;
 		}
@@ -182,6 +185,7 @@ void Editor::checkMaterials(RenderWindow &window)
 		{
 			this->border.setPosition(128.0f, 0.0f);
 
+			system("CLS");
 			cout << "Spawn Player Selected" << endl;
 			this->materialSelected = 4;
 		}
@@ -255,12 +259,19 @@ void Editor::saveOnFile(lua_State* E, RenderWindow &window)
 			}
 		}
 
-		if (found >= 2)
+		if (found > 1)
 		{
+			system("CLS");
 			cout << "To many player spawns [Blue Spawn Point]. Only 1 works." << endl;
+		}
+		else if (found == 0)
+		{
+			system("CLS");
+			cout << "No player spawns found [Blue Spawn Point]. Only 1 works." << endl;
 		}
 		else
 		{
+			system("CLS");
 			cout << "Write a name on the map: ";
 			string input;
 			cin >> input;

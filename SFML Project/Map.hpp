@@ -15,6 +15,7 @@ private:
 
 	bool mapFound = false;
 
+	Vector2i playerSpawn;
 	vector<vector <Sprite*>> map;
 	int sizeXY;
 public:
@@ -23,10 +24,11 @@ public:
 	void update(RenderWindow &window);
 	void draw(RenderTarget &target, RenderStates states)const;
 
-	void loadFromFile(lua_State* L, RenderWindow &window);
+	Vector2i loadFromFile(lua_State* L, RenderWindow &window);
 	void reloadSprites(lua_State* L);
 
 	void reloadVectors();
 	void clearVector();
+	bool checkPlayerSpawnArea();
 };
 #endif

@@ -27,6 +27,7 @@ public:
 	void updateSpriteAnimation();
 	void damageHp();
 	int getHp();
+	void setPlayerPosInLua(lua_State* L, Vector2i pos);
 };
 
 #endif // !

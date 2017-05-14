@@ -46,7 +46,7 @@ void Map::draw(RenderTarget &target, RenderStates states)const
 	}
 }
 
-void Map::loadFromFile(lua_State* L, RenderWindow &window)
+Vector2i Map::loadFromFile(lua_State* L, RenderWindow &window)
 {
 	while (!mapFound)
 	{
@@ -66,11 +66,20 @@ void Map::loadFromFile(lua_State* L, RenderWindow &window)
 
 		mapFound = lua_toboolean(L, -1);
 		lua_pop(L, 1);
+
+		if (mapFound)
+		{
+			reloadSprites(L);
+			mapFound = checkPlayerSpawnArea();
+		}
 	}
+
 	if (mapFound)
 	{
-		reloadSprites(L);
+		return this->playerSpawn;
 	}
+
+	return Vector2i(-1, -1);
 }
 
 void Map::reloadSprites(lua_State* L)
@@ -151,4 +160,33 @@ void Map::clearVector()
 		this->map[y].clear();
 	}
 	this->map.clear();
+}
+
+bool Map::checkPlayerSpawnArea()
+{
+	int found = 0;
+	for (int y = 0; y < this->map.size(); y++ && found <= 1)
+	{
+		for (int x = 0; x < this->map[y].size(); x++ && found <= 1)
+		{
+			if (this->map[x][y]->getTexture() == &this->spawnPlayerTexture)
+			{
+				found++;
+				playerSpawn.x = y;
+				playerSpawn.y = x;
+			}
+		}
+	}
+
+	if (found > 1)
+	{
+		cout << "To many player spawns [Blue Spawn Point]. Only 1 works." << endl;
+		return false;
+	}
+	else if (found == 0)
+	{
+		cout << "No player spawns found [Blue Spawn Point]. Only 1 works." << endl;
+		return false;
+	}
+	return true;
 }

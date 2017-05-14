@@ -42,8 +42,8 @@ end
 
 --Positions
 function Player:setPlayerPos(x, y)
-	self.pos.x = x
-	self.pos.y = y
+	self.pos.x = (x * 16) + 32
+	self.pos.y = (y * 16) + 32
 end
 
 function Player:getPlayerPos()

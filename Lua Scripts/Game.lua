@@ -16,6 +16,10 @@ function Update(dt)
 
 end
 
+function setPlayerPos(x, y)
+	entityHandler:setPlayerPos(x, y);
+end
+
 function getPlayerPos()
 	return entityHandler.player1:getPlayerPos()
 end

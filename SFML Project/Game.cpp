@@ -20,15 +20,6 @@ Game::Game() : edit()
 	lua_pushcfunction(this->L, Game::CheckMovement);
 	lua_setglobal(this->L, "CheckMovement");
 
-	/*lua_pushcfunction(this->L, Game::getSelectedMaterial);
-	lua_setglobal(this->L, "getSelectedMaterial");
-
-	lua_pushcfunction(this->L, Game::getMousePosToWindow);
-	lua_setglobal(this->L, "getMousePosToWindow");
-
-	lua_pushcfunction(this->L, Game::getCurrentState);
-	lua_setglobal(this->L, "getCurrentState");*/
-
 	int error = luaL_loadfile(this->L, "../Lua Scripts/Game.lua") || lua_pcall(this->L, 0, 1, 0);
 	if (error)
 	{
@@ -77,7 +68,8 @@ void Game::update(RenderWindow &window)
 				this->startStateOn = true;
 				this->dt.restart();
 
-				map.loadFromFile(L, window);
+				this->playerSpawn = map.loadFromFile(L, window);
+				this->et.setPlayerSpawnPos(this->L, this->playerSpawn);
 			}
 			if (this->editor.getGlobalBounds().contains(window.mapPixelToCoords(Mouse::getPosition(window))))
 			{
@@ -193,34 +185,3 @@ int Game::CheckMovement(lua_State* L)
 		return 0;
 	}
 }
-
-//int Game::getSelectedMaterial(lua_State* L)
-//{
-//	/*if (this->edit.getMaterialSelected != -1)
-//	{
-//		lua_pushinteger(L, this->edit.getMaterialSelected);
-//		return 1;
-//	}
-//	else*/
-//		return 0;
-//}
-//
-//int Game::getMousePosToWindow(lua_State* L)
-//{
-//	if (Mouse::isButtonPressed(Mouse::Left))
-//	{
-//		Vector2i pos = Mouse::getPosition();
-//
-//		lua_pushinteger(L, pos.x);
-//		lua_pushinteger(L, pos.y);
-//
-//		return 2;
-//	}
-//	else
-//		return 0;
-//}
-//
-//int Game::getCurrentState(lua_State* L)
-//{
-//	return 0;
-//}

@@ -27,6 +27,10 @@ function EntityHandler:Update(dt)
 	end
 end
 
+function EntityHandler:setPlayerPos(x, y)
+	self.player1:setPlayerPos(x, y);
+end
+
 function EntityHandler:getPlayerPos()
 	return self.player1:getPlayerPos()
 end

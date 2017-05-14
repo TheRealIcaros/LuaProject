@@ -86,3 +86,11 @@ int Player::getHp()
 {
 	return this->hp;
 }
+
+void Player::setPlayerPosInLua(lua_State* L, Vector2i pos)
+{
+	lua_getglobal(L, "setPlayerPos");
+	lua_pushinteger(L, pos.x);
+	lua_pushinteger(L, pos.y);
+	lua_pcall(L, 2, 0, 0);
+}
