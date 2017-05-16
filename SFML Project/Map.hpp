@@ -35,5 +35,6 @@ public:
 
 	int getMapSize()const;
 	bool CompareTexture(Vector2i pos);
+	Sprite* getSprite(Vector2i pos)const;
 };
 #endif

@@ -55,31 +55,31 @@ Editor::Editor()
 	this->border.setOutlineThickness(-3.0f);
 
 	//Save, Load and New Map Button
-	this->saveButton.setSize(Vector2f(32, 32));
+	this->saveTexture.loadFromFile("../Images/Save.png");
+	this->saveButton.setTexture(this->saveTexture);
 	this->saveButton.setPosition(Vector2f(768, 0));
-	this->saveButton.setFillColor(Color::Yellow);
 
-	this->loadButton.setSize(Vector2f(32, 32));
+	this->loadTexture.loadFromFile("../Images/Load.png");
+	this->loadButton.setTexture(this->loadTexture);
 	this->loadButton.setPosition(Vector2f(736, 0));
-	this->loadButton.setFillColor(Color::Green);
 
-	this->newButton.setSize(Vector2f(32, 32));
+	this->newTexture.loadFromFile("../Images/Reset.png");
+	this->newButton.setTexture(this->newTexture);
 	this->newButton.setPosition(Vector2f(704, 0));
-	this->newButton.setFillColor(Color::Red);
 
 
 	//Resize Map Buttons
-	this->smallButton.setSize(Vector2f(32, 32));
+	this->smallTexture.loadFromFile("../Images/Size16.png");
+	this->smallButton.setTexture(this->smallTexture);
 	this->smallButton.setPosition(Vector2f(400, 0));
-	this->smallButton.setFillColor(Color::Green);
 
-	this->mediumButton.setSize(Vector2f(32, 32));
+	this->mediumTexture.loadFromFile("../Images/Size32.png");
+	this->mediumButton.setTexture(this->mediumTexture);
 	this->mediumButton.setPosition(Vector2f(432, 0));
-	this->mediumButton.setFillColor(Color::Yellow);
 
-	this->largeButton.setSize(Vector2f(32, 32));
+	this->largeTexture.loadFromFile("../Images/Size46.png");
+	this->largeButton.setTexture(this->largeTexture);
 	this->largeButton.setPosition(Vector2f(464, 0));
-	this->largeButton.setFillColor(Color::Red);
 
 	this->materialSelected = -1;
 

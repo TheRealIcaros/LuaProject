@@ -66,3 +66,7 @@ end
 function EntityHandler:getPlayerDir()
 	return self.player1:getPlayerDir()
 end
+
+function EntityHandler:setPlayerDir(x, y)
+	self.player1:setPlayerDir(x, y)
+end

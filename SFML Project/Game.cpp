@@ -2,17 +2,17 @@
 
 Game::Game() : edit()
 {
-	this->start.setSize(Vector2f(200.0f, 50.0f));
+	this->startTexture.loadFromFile("../Images/StartMenu.png");
+	this->start.setTexture(this->startTexture);
 	this->start.setPosition(Vector2f(300.0f, 75.0f));
-	this->start.setFillColor(Color::Green);
 
-	this->editor.setSize(Vector2f(200.0f, 50.0f));
+	this->editorTexture.loadFromFile("../Images/EditorMenu.png");
+	this->editor.setTexture(this->editorTexture);
 	this->editor.setPosition(Vector2f(300.0f, 175.0f));
-	this->editor.setFillColor(Color::Yellow);
 
-	this->exit.setSize(Vector2f(200.0f, 50.0f));
+	this->exitTexture.loadFromFile("../Images/QuitMenu.png");
+	this->exit.setTexture(this->exitTexture);
 	this->exit.setPosition(Vector2f(300.0f, 275.0f));
-	this->exit.setFillColor(Color::Red);
 
 	this->L = luaL_newstate();
 	luaL_openlibs(this->L);
@@ -128,6 +128,7 @@ void Game::draw(RenderTarget &target, RenderStates states)const
 
 void Game::updateStartState()
 {
+	this->playerTileCollision(L);
 	lua_getglobal(this->L, "Update");
 	lua_pushnumber(this->L, this->dt.getElapsedTime().asSeconds());
 	int error = lua_pcall(this->L, 1, 0, 0);
@@ -146,7 +147,6 @@ void Game::updateStartState()
 	this->et.update(this->L, this->dt.getElapsedTime().asSeconds());
 
 	this->dt.restart();
-	this->playerTileCollision(L);
 
 	this->wasPressed = isPressed;
 }
@@ -167,7 +167,7 @@ int Game::playerIsAttacking(lua_State* L)
 
 int Game::CheckMovement(lua_State* L)
 {
-	Vector2f dir;
+	Vector2f dir(0.0, 0.0);
 	if (lua_isinteger(L, -1))
 	{
 		int lookDirection = lua_tointeger(L, -1);
@@ -230,54 +230,75 @@ Vector2i* Game::randomEnemySpawnPoint()
 
 void Game::playerTileCollision(lua_State* L)
 {
-	Vector2i tile;
-	tile = getPlayArea();
-
-	cout << tile.x << ", " << tile.y << endl;
-
-	if (this->map.CompareTexture(tile))
+	Vector2f dir;
+	lua_getglobal(L, "getPlayerDir");
+	lua_pcall(L, 0, 2, 0);
+	if (lua_isinteger(L, -1) && lua_isinteger(L, -2))
 	{
-		cout << "Wall Found" << endl;
+		dir.x = lua_tointeger(L, -1);
+		dir.y = lua_tointeger(L, -2);
+		lua_pop(L, 2);
 	}
 
-	//Vector2i tile;
-	//for (int y = -1; y < 2; y++)
-	//{
-	//	tile.y = getPlayArea().y + y;
+	Vector2i tile;
+	for (int y = -1; y < 2; y++)
+	{
+		tile.y = getPlayArea().y + y;
 
-	//	if (tile.y > this->map.getMapSize() - 1)
-	//	{
-	//		tile.y = 0;
-	//	}
-	//	else if (tile.y < 0)
-	//	{
-	//		tile.y = this->map.getMapSize() - 1;
-	//	}
-	//	for (int x = -1; x < 2; x++)
-	//	{
-	//		tile.x = getPlayArea().x + x;
-	//		if (tile.x > this->map.getMapSize() - 1)
-	//		{
-	//			tile.x = 0;
-	//		}
-	//		else if (tile.x < 0)
-	//		{
-	//			tile.x = this->map.getMapSize() - 1;
-	//		}
+		if (tile.y > this->map.getMapSize() - 1)
+		{
+			tile.y = 0;
+		}
+		else if (tile.y < 0)
+		{
+			tile.y = this->map.getMapSize() - 1;
+		}
+		for (int x = -1; x < 2; x++)
+		{
+			tile.x = getPlayArea().x + x;
+			if (tile.x > this->map.getMapSize() - 1)
+			{
+				tile.x = 0;
+			}
+			else if (tile.x < 0)
+			{
+				tile.x = this->map.getMapSize() - 1;
+			}
 
-	//		//cout << tile.x << ", " << tile.y << endl;
+			//Player Move + Collision
+			if (this->map.CompareTexture(tile))
+			{
+				//cout << "Tile" << endl;
+				if (!this->place_free(this->dt.getElapsedTime().asSeconds(), this->et.getPlayer().getHitbox(), this->map.getSprite(tile), L, dir))
+				{
+					//cout << "Wall hit" << endl;
+					if (dir.x > 0.0)
+					{
 
-	//		//Player Move + Collision
-	//		if (this->map.getTile(tile)->getTexture() == &this->map.getWallTexture())
-	//		{
-	//			cout << "Tile" << endl;
-	//			if (!this->place_free(this->dt.getElapsedTime().asSeconds(), this->et.getPlayer().getHitbox(), this->map.getTile(tile), L))
-	//			{
-	//				cout << "Wall hit" << endl;
-	//			}
-	//		}
-	//	}
-	//}
+					}
+					else if (dir.x < 0.0)
+					{
+
+					}
+					if (dir.y > 0.0)
+					{
+
+					}
+					else if (dir.y < 0.0)
+					{
+
+					}
+					dir.x = 0.0;
+					dir.y = 0.0;
+
+					/*lua_getglobal(L, "setPlayerDir");
+					lua_pushnumber(L, dir.x);
+					lua_pushnumber(L, dir.y);
+					lua_pcall(L, 2, 0, 0);*/
+				}
+			}
+		}
+	}
 }
 
 Vector2i Game::getPlayArea()
@@ -292,20 +313,10 @@ Vector2i Game::getPlayArea()
 	return result;
 }
 
-bool Game::place_free(float dt, RectangleShape rect1, Sprite* rect2, lua_State* L)
+bool Game::place_free(float dt, RectangleShape rect1, Sprite* rect2, lua_State* L, Vector2f dir)
 {
 	bool result = true;
-
-	Vector2f dir;
-	lua_getglobal(L, "getPlayerDir");
-	lua_pcall(L, 0, 2, 0);
-	if (lua_isinteger(L, -1) && lua_isinteger(L, -2))
-	{
-		dir.x = lua_tointeger(L, -1);
-		dir.y = lua_tointeger(L, -2);
-		lua_pop(L, 2);
-	}
-
+	
 	rect1.setPosition(rect1.getPosition() + (dt * 75 * dir));
 
 	if (rect1.getGlobalBounds().intersects(rect2->getGlobalBounds()))

@@ -225,3 +225,9 @@ bool Map::CompareTexture(Vector2i pos)
 
 	return result;
 }
+
+Sprite* Map::getSprite(Vector2i pos)const
+{
+	return this->map[pos.x][pos.y];
+}
+

@@ -9,9 +9,12 @@
 class Game : public Drawable
 {
 private:
-	RectangleShape start;
-	RectangleShape editor;
-	RectangleShape exit;
+	Texture startTexture;
+	Texture editorTexture;
+	Texture exitTexture;
+	Sprite start;
+	Sprite editor;
+	Sprite exit;
 
 	lua_State* L;
 	EntityContainer et;
@@ -46,6 +49,6 @@ public:
 
 	void playerTileCollision(lua_State* L);
 	Vector2i getPlayArea();
-	bool place_free(float dt, RectangleShape rect1, Sprite* rect2, lua_State* L);
+	bool place_free(float dt, RectangleShape rect1, Sprite* rect2, lua_State* L, Vector2f dir);
 };
 #endif // !

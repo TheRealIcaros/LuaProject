@@ -20,13 +20,19 @@ private:
 	Sprite spawnPlayer;
 	RectangleShape border;
 
-	RectangleShape saveButton;
-	RectangleShape loadButton;
-	RectangleShape newButton;
+	Texture saveTexture;
+	Texture loadTexture;
+	Texture newTexture;
+	Sprite saveButton;
+	Sprite loadButton;
+	Sprite newButton;
 
-	RectangleShape smallButton;
-	RectangleShape mediumButton;
-	RectangleShape largeButton;
+	Texture smallTexture;
+	Texture mediumTexture;
+	Texture largeTexture;
+	Sprite smallButton;
+	Sprite mediumButton;
+	Sprite largeButton;
 
 	int materialSelected;
 

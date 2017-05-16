@@ -63,3 +63,7 @@ end
 function getPlayerDir()
 	return entityHandler:getPlayerDir()
 end
+
+function setPlayerDir(x, y)
+	entityHandler:setPlayerDir(x, y)
+end
