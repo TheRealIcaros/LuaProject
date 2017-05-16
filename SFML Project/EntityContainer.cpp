@@ -98,6 +98,7 @@ void EntityContainer::playerAttackEnemyColition(lua_State* L, int i)
 		temp = this->enemys.at(i);
 		this->enemys.at(i) = this->enemys.back();
 		this->enemys.back() = temp;
+		delete this->enemys.back();
 		this->enemys.pop_back();
 
 		lua_getglobal(L, "killEnemy");

@@ -44,9 +44,9 @@ function EntityHandler:getPlayerLookDirection()
 end
 
 function EntityHandler:addEnemy(x, y)
-	self.enemyContainer[self.nrOfEnemys + 1] = Enemy:New({x = x, y = y})
-	self.enemyContainer[self.nrOfEnemys + 1]:setEnemyPos(x, y)
 	self.nrOfEnemys = self.nrOfEnemys + 1
+	self.enemyContainer[self.nrOfEnemys] = Enemy:New({x = x, y = y})
+	self.enemyContainer[self.nrOfEnemys]:setEnemyPos(x, y)
 end
 
 function EntityHandler:restart()
@@ -58,7 +58,7 @@ function EntityHandler:getPlayerIsAttacking()
 end
 
 function EntityHandler:killEnemy(i)
-	self.enemyContainer[i + 1], self.enemyContainer[self.nrOfEnemys + 1] = self.enemyContainer[self.nrOfEnemys + 1], self.enemyContainer[i + 1]
-	self.enemyContainer[self.nrOfEnemys + 1] = nil
+	self.enemyContainer[i + 1], self.enemyContainer[self.nrOfEnemys] = self.enemyContainer[self.nrOfEnemys], self.enemyContainer[i + 1]
+	self.enemyContainer[self.nrOfEnemys] = nil
 	self.nrOfEnemys = self.nrOfEnemys - 1
 end
