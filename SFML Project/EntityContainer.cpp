@@ -128,3 +128,8 @@ void EntityContainer::setPlayerSpawnPos(lua_State* L, Vector2i pos)
 {
 	this->player.setPlayerPosInLua(L, pos);
 }
+
+Player EntityContainer::getPlayer()const
+{
+	return this->player;
+}

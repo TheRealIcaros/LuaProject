@@ -18,7 +18,7 @@ Player::Player()
 	this->isAttacking = false;
 
 	this->hitbox.setSize(Vector2f(10.0, 14.0));
-	this->hitbox.setFillColor(sf::Color(0, 100, 100, 180));
+	this->hitbox.setFillColor(sf::Color(0, 100, 100, 0));
 	this->hitbox.setOrigin(-3.0, -2.0);
 }
 

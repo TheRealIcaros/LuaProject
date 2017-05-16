@@ -43,5 +43,9 @@ public:
 	static int CheckMovement(lua_State* L);
 
 	Vector2i* randomEnemySpawnPoint();
+
+	void playerTileCollision(lua_State* L);
+	Vector2i getPlayArea();
+	bool place_free(float dt, RectangleShape rect1, Sprite* rect2, lua_State* L);
 };
 #endif // !

@@ -3,7 +3,8 @@ dofile("../Lua Scripts/Vector.lua")
 Player = {pos = Vector:New({x = 200, y = 200}),
 			speed = 75,
 			lookDirection = 0,
-			isAttacking = false}
+			isAttacking = false,
+			dir = Vector:New()}
 
 function Player:New(p)
 	p = p or {}
@@ -30,16 +31,16 @@ end
 
 --Update Movements
 function Player:updateMovement(dt)
-	local dir = Vector:New()
-	dir.x, dir.y, self.lookDirection = CheckMovement(self.lookDirection)
+	self.dir = Vector:New()
+	self.dir.x, self.dir.y, self.lookDirection = CheckMovement(self.lookDirection)
 
-	if((dir.x > 0 or dir.x < 0) and (dir.y > 0 or dir.y < 0))then
-		dir.x = dir.x * 0.707
-		dir.y = dir.y * 0.707
+	if((self.dir.x > 0 or self.dir.x < 0) and (self.dir.y > 0 or self.dir.y < 0))then
+		self.dir.x = self.dir.x * 0.707
+		self.dir.y = self.dir.y * 0.707
 	end
 		
 	local movementLength = Vector:New({x = 0, y = 0})
-	movementLength = dir * self.speed * dt
+	movementLength = self.dir * self.speed * dt
 
 	self.pos = self.pos + movementLength
 end
@@ -65,4 +66,8 @@ end
 
 function Player:getPlayerIsAttacking()
 	return self.isAttacking
+end
+
+function Player:getPlayerDir()
+	return self.dir.x, self.dir.y
 end

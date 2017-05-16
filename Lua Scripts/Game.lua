@@ -59,3 +59,7 @@ end
 function killEnemy(i)
 	entityHandler:killEnemy(i);
 end
+
+function getPlayerDir()
+	return entityHandler:getPlayerDir()
+end

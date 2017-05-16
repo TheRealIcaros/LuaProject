@@ -32,5 +32,8 @@ public:
 	void clearVector();
 	bool checkPlayerSpawnArea();
 	vector<Vector2i*> findEnemySpawnPoints();
+
+	int getMapSize()const;
+	bool CompareTexture(Vector2i pos);
 };
 #endif

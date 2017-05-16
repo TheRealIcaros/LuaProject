@@ -146,6 +146,7 @@ void Game::updateStartState()
 	this->et.update(this->L, this->dt.getElapsedTime().asSeconds());
 
 	this->dt.restart();
+	this->playerTileCollision(L);
 
 	this->wasPressed = isPressed;
 }
@@ -225,4 +226,92 @@ Vector2i* Game::randomEnemySpawnPoint()
 	uniform_int_distribution<int> uniDistribution(0, this->enemySpawnPoints.size() -1);
 	int number = uniDistribution(rd);
 	return this->enemySpawnPoints.at(number);
+}
+
+void Game::playerTileCollision(lua_State* L)
+{
+	Vector2i tile;
+	tile = getPlayArea();
+
+	cout << tile.x << ", " << tile.y << endl;
+
+	if (this->map.CompareTexture(tile))
+	{
+		cout << "Wall Found" << endl;
+	}
+
+	//Vector2i tile;
+	//for (int y = -1; y < 2; y++)
+	//{
+	//	tile.y = getPlayArea().y + y;
+
+	//	if (tile.y > this->map.getMapSize() - 1)
+	//	{
+	//		tile.y = 0;
+	//	}
+	//	else if (tile.y < 0)
+	//	{
+	//		tile.y = this->map.getMapSize() - 1;
+	//	}
+	//	for (int x = -1; x < 2; x++)
+	//	{
+	//		tile.x = getPlayArea().x + x;
+	//		if (tile.x > this->map.getMapSize() - 1)
+	//		{
+	//			tile.x = 0;
+	//		}
+	//		else if (tile.x < 0)
+	//		{
+	//			tile.x = this->map.getMapSize() - 1;
+	//		}
+
+	//		//cout << tile.x << ", " << tile.y << endl;
+
+	//		//Player Move + Collision
+	//		if (this->map.getTile(tile)->getTexture() == &this->map.getWallTexture())
+	//		{
+	//			cout << "Tile" << endl;
+	//			if (!this->place_free(this->dt.getElapsedTime().asSeconds(), this->et.getPlayer().getHitbox(), this->map.getTile(tile), L))
+	//			{
+	//				cout << "Wall hit" << endl;
+	//			}
+	//		}
+	//	}
+	//}
+}
+
+Vector2i Game::getPlayArea()
+{
+	int x = (int)this->et.getPlayer().getHitbox().getPosition().x + 8;
+	int y = (int)this->et.getPlayer().getHitbox().getPosition().y + 9;
+	Vector2i result;
+	Vector2i startPos = Vector2i(32, 32);
+	result.y = ((x - startPos.x) / 16) % this->map.getMapSize();
+	result.x = ((y - startPos.y) / 16) % this->map.getMapSize();
+	//cout << result.x << ", " << result.y << endl;
+	return result;
+}
+
+bool Game::place_free(float dt, RectangleShape rect1, Sprite* rect2, lua_State* L)
+{
+	bool result = true;
+
+	Vector2f dir;
+	lua_getglobal(L, "getPlayerDir");
+	lua_pcall(L, 0, 2, 0);
+	if (lua_isinteger(L, -1) && lua_isinteger(L, -2))
+	{
+		dir.x = lua_tointeger(L, -1);
+		dir.y = lua_tointeger(L, -2);
+		lua_pop(L, 2);
+	}
+
+	rect1.setPosition(rect1.getPosition() + (dt * 75 * dir));
+
+	if (rect1.getGlobalBounds().intersects(rect2->getGlobalBounds()))
+	{
+		result = false;
+	}
+
+	return result;
 }

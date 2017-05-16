@@ -62,3 +62,7 @@ function EntityHandler:killEnemy(i)
 	self.enemyContainer[self.nrOfEnemys] = nil
 	self.nrOfEnemys = self.nrOfEnemys - 1
 end
+
+function EntityHandler:getPlayerDir()
+	return self.player1:getPlayerDir()
+end
