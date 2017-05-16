@@ -42,7 +42,12 @@ void EntityContainer::update(lua_State* L, float dt)
 	{
 		this->enemys[i]->update(L, dt, i + 1);
 
-		playerColition(i);
+		enemyAttackPlayerColition(i);
+
+		if (this->player.getIsSwinging())
+		{
+			this->playerAttackEnemyColition(L, i);
+		}
 	}	
 }
 
@@ -69,9 +74,9 @@ void EntityContainer::addEnemy(lua_State* L, float x, float y)
 	this->enemys.push_back(new Enemy(L, x, y));
 }
 
-void EntityContainer::playerColition(int i)
+void EntityContainer::enemyAttackPlayerColition(int i)
 {
-	if (this->player.getSprite().getGlobalBounds().intersects(this->enemys[i]->getSprite().getGlobalBounds()))
+	if (this->player.getHitbox().getGlobalBounds().intersects(this->enemys[i]->getSprite().getGlobalBounds()))
 	{
 		if (hpClock.getElapsedTime().asSeconds() > 1.0f)
 		{
@@ -79,6 +84,25 @@ void EntityContainer::playerColition(int i)
 			this->player.damageHp();
 			cout << this->player.getHp() << endl;
 		}
+	}
+}
+
+void EntityContainer::playerAttackEnemyColition(lua_State* L, int i)
+{
+	if (this->player.getSprite().getGlobalBounds().intersects(this->enemys[i]->getSprite().getGlobalBounds()))
+	{
+		cout << "Player Hit Enemy" << endl;
+
+		Enemy *temp;
+
+		temp = this->enemys.at(i);
+		this->enemys.at(i) = this->enemys.back();
+		this->enemys.back() = temp;
+		this->enemys.pop_back();
+
+		lua_getglobal(L, "killEnemy");
+		lua_pushinteger(L, i);
+		lua_pcall(L, 1, 0, 0);
 	}
 }
 

@@ -51,3 +51,11 @@ end
 function getMapSize()
 	return map:getMapSize()
 end
+
+function getPlayerIsAttacking()
+	return entityHandler:getPlayerIsAttacking()
+end
+
+function killEnemy(i)
+	entityHandler:killEnemy(i);
+end

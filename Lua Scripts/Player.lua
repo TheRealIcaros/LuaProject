@@ -2,7 +2,8 @@ dofile("../Lua Scripts/Vector.lua")
 
 Player = {pos = Vector:New({x = 200, y = 200}),
 			speed = 75,
-			lookDirection = 0}
+			lookDirection = 0,
+			isAttacking = false}
 
 function Player:New(p)
 	p = p or {}
@@ -20,7 +21,10 @@ end
 
 function Player:Update(dt)
 
-	self:updateMovement(dt)	
+	self:checkMelee(dt)
+	if(not self.isAttacking)then
+		self:updateMovement(dt)	
+	end
 	
 end
 
@@ -40,6 +44,11 @@ function Player:updateMovement(dt)
 	self.pos = self.pos + movementLength
 end
 
+--Melee
+function Player:checkMelee(dt)
+	self.isAttacking = playerIsAttacking()
+end
+
 --Positions
 function Player:setPlayerPos(x, y)
 	self.pos.x = (x * 16) + 32
@@ -52,4 +61,8 @@ end
 
 function Player:getPlayerLookDirection()
 	return self.lookDirection
+end
+
+function Player:getPlayerIsAttacking()
+	return self.isAttacking
 end

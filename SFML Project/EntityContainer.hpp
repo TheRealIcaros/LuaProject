@@ -25,7 +25,8 @@ public:
 	void draw(RenderTarget &target, RenderStates states)const;
 
 	void addEnemy(lua_State* L, float x = 200, float y = 200);
-	void playerColition(int i);
+	void enemyAttackPlayerColition(int i);
+	void playerAttackEnemyColition(lua_State* L, int i);
 	void wallColition();
 	void restart(lua_State* L);
 	void setPlayerSpawnPos(lua_State* L, Vector2i pos);

@@ -39,6 +39,7 @@ public:
 
 	void updateEditorState(RenderWindow &window);
 
+	static int playerIsAttacking(lua_State* L);
 	static int CheckMovement(lua_State* L);
 
 	Vector2i* randomEnemySpawnPoint();

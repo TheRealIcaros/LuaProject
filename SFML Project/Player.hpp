@@ -6,13 +6,20 @@
 class Player : public Drawable
 {
 private:
+	Texture swingTexture;
 	Texture texturePlayer;
 	Sprite spritePlayer;
 	int lookDirection;
 	int spriteAnimation;
 
+	RectangleShape hitbox;
+
 	int hp;
 
+	int animationSwing;
+	bool isAttacking;
+	bool wasAttacking;
+	bool isSwinging;
 	Clock time;
 public:
 	Player();
@@ -26,8 +33,11 @@ public:
 	Sprite getSprite()const;
 	void updateSpriteAnimation();
 	void damageHp();
-	int getHp();
+	int getHp()const;
 	void setPlayerPosInLua(lua_State* L, Vector2i pos);
+	void checkAttacking(lua_State* L, float dt);
+	bool getIsSwinging()const;
+	RectangleShape getHitbox()const;
 };
 
 #endif // !

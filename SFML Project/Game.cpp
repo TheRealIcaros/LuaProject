@@ -20,6 +20,9 @@ Game::Game() : edit()
 	lua_pushcfunction(this->L, Game::CheckMovement);
 	lua_setglobal(this->L, "CheckMovement");
 
+	lua_pushcfunction(this->L, Game::playerIsAttacking);
+	lua_setglobal(this->L, "playerIsAttacking");
+
 	int error = luaL_loadfile(this->L, "../Lua Scripts/Game.lua") || lua_pcall(this->L, 0, 1, 0);
 	if (error)
 	{
@@ -150,6 +153,15 @@ void Game::updateStartState()
 void Game::updateEditorState(RenderWindow &window)
 {
 	this->edit.update(window);
+}
+
+int Game::playerIsAttacking(lua_State* L)
+{
+	bool isAttacking = Keyboard::isKeyPressed(Keyboard::Space);
+
+	lua_pushboolean(L, isAttacking);
+
+	return 1;
 }
 
 int Game::CheckMovement(lua_State* L)

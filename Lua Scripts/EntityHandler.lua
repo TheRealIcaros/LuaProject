@@ -52,3 +52,13 @@ end
 function EntityHandler:restart()
 	self:Start()
 end
+
+function EntityHandler:getPlayerIsAttacking()
+	return self.player1:getPlayerIsAttacking()
+end
+
+function EntityHandler:killEnemy(i)
+	self.enemyContainer[i + 1], self.enemyContainer[self.nrOfEnemys + 1] = self.enemyContainer[self.nrOfEnemys + 1], self.enemyContainer[i + 1]
+	self.enemyContainer[self.nrOfEnemys + 1] = nil
+	self.nrOfEnemys = self.nrOfEnemys - 1
+end
