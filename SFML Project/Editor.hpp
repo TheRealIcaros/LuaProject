@@ -1,8 +1,6 @@
 #ifndef EDITOR_HPP
 #define EDITOR_HPP
 
-#include "Node.hpp"
-
 #include "Include.h"
 
 class Editor : public Drawable

@@ -59,6 +59,7 @@ function Map:resetTables()
 
 	for y = 1, self.size do
 		for x = 1, self.size do
+			self.nodeList[x][y] = nil
 			self.nodeList[x][y] = Node:New()
 		end
 	end

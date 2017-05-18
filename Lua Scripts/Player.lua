@@ -1,10 +1,14 @@
 dofile("../Lua Scripts/Vector.lua")
 
 Player = {pos = Vector:New({x = 200, y = 200}),
-			speed = 75,
+			speed = 150,
 			lookDirection = 0,
 			isAttacking = false,
-			dir = Vector:New()}
+			dir = Vector:New(),
+			canMoveUp = true,
+			canMoveDown = true,
+			canMoveLeft = true,
+			canMoveRight = true}
 
 function Player:New(p)
 	p = p or {}
@@ -38,10 +42,41 @@ function Player:updateMovement(dt)
 		self.dir.y = self.dir.y * 0.707
 	end
 
-	local movementLength = Vector:New({x = 0, y = 0})
-	movementLength = self.dir * self.speed * dt
+	length = self:calculateMovementLength(dt)
 
-	self.pos = self.pos + movementLength
+	if(self.lookDirection == 1)then --up
+		if(self.canMoveUp)then
+			self:movePlayer(0, length.y)
+			self.canMoveUp = true
+			self.canMoveDown = true
+	 		self.canMoveRight = true
+	 		self.canMoveLeft = true
+		end
+	elseif(self.lookDirection == 0)then --down
+		if(self.canMoveDown)then
+			self:movePlayer(0, length.y)
+			self.canMoveUp = true
+			self.canMoveDown = true
+	 		self.canMoveRight = true
+	 		self.canMoveLeft = true
+		end
+	elseif(self.lookDirection == 3)then --left
+		if(self.canMoveLeft)then
+			self:movePlayer(length.x, 0)
+			self.canMoveUp = true
+			self.canMoveDown = true
+	 		self.canMoveRight = true
+	 		self.canMoveLeft = true
+		end
+	elseif(self.lookDirection == 2)then --right
+		if(self.canMoveRight)then
+			self:movePlayer(length.x, 0)
+			self.canMoveUp = true
+			self.canMoveDown = true
+	 		self.canMoveRight = true
+	 		self.canMoveLeft = true
+		end
+	end
 end
 
 --Melee
@@ -51,8 +86,6 @@ end
 
 --Positions
 function Player:setPlayerPos(x, y)
-	--self.pos.x = (x * 16) + 32
-	--self.pos.y = (y * 16) + 32
 	self.pos.x = x
 	self.pos.y = y
 end
@@ -76,4 +109,36 @@ end
 function Player:setPlayerDir(x, y)
 	self.dir.x = x
 	self.dir.y = y
+end
+
+function Player:setCanMove(Up, Down, Left, Right)
+print(Up .. " , " .. Down .. " , " .. Left .. " , " .. Up)
+	self.canMoveUp = Up
+	self.canMoveDown = Down
+	self.canMoveLeft = Left
+	self.canMoveRight = Right
+end
+
+function Player:movePlayer(x, y)
+	self.pos.x = self.pos.x + x
+	self.pos.y = self.pos.y + y
+end
+
+function Player:calculateMovementLength(dt)
+	local movementLength = Vector:New({x = 0, y = 0})
+	movementLength = self.dir * self.speed * dt
+
+	return movementLength
+end
+
+function Player:movePlayerFromC(x, y, dt)
+	self.dir.x = x
+	self.dir.y = y
+	length = self:calculateMovementLength(dt)
+
+	self:movePlayer(length.x, length.y)
+end
+
+function Player:getCanMove()
+	return self.canMoveUp, self.canMoveDown, self.canMoveLeft, self.canMoveRight
 end

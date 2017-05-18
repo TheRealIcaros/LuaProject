@@ -27,7 +27,6 @@
     </ClCompile>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Map.cpp" />
-    <ClCompile Include="Node.cpp" />
     <ClCompile Include="Player.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -39,7 +38,6 @@
     </ClInclude>
     <ClInclude Include="Include.h" />
     <ClInclude Include="Map.hpp" />
-    <ClInclude Include="Node.hpp" />
     <ClInclude Include="Player.hpp" />
   </ItemGroup>
   <ItemGroup>

@@ -18,7 +18,7 @@ Player::Player()
 	this->isAttacking = false;
 
 	this->hitbox.setSize(Vector2f(10.0, 14.0));
-	this->hitbox.setFillColor(sf::Color(0, 100, 100, 0));
+	this->hitbox.setFillColor(sf::Color(0, 100, 100, 230));
 	this->hitbox.setOrigin(-3.0, -2.0);
 }
 
@@ -179,10 +179,16 @@ RectangleShape Player::getHitbox()const
 
 void Player::setPlayerPos(lua_State* L, Vector2f pos)
 {
-	Vector2f move;
-	//move.x = this->spritePlayer.getPosition().x + pos.x;
-	//move.y = this->spritePlayer.getPosition().y + pos.y;
-	this->spritePlayer.setPosition(pos);
+	//this->spritePlayer.setPosition(pos);
 
 	this->setPlayerPosInLua(L, pos);
+}
+
+void Player::movePlayer(Vector2f move, lua_State* L, float dt)
+{
+	lua_getglobal(L, "movePlayerFromC");
+	lua_pushnumber(L, move.x);
+	lua_pushnumber(L, move.y);
+	lua_pushnumber(L, dt);
+	lua_pcall(L, 3, 0, 0);
 }

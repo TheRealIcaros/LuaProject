@@ -10,6 +10,7 @@ Map::Map()
 	{
 		cout << "Grass image not found!" << endl;
 	}
+	wallTexture.setRepeated(true);
 	if (!this->waterTexture.loadFromFile("../Images/water.png"))
 	{
 		cout << "Water image not found!" << endl;
@@ -29,6 +30,7 @@ Map::Map()
 Map::~Map()
 {
 	this->clearVector();
+	this->clearWalls();
 }
 
 void Map::update(RenderWindow &window)
@@ -44,6 +46,10 @@ void Map::draw(RenderTarget &target, RenderStates states)const
 			target.draw(*this->map[y][x], states);
 		}
 	}
+	//for (int i = 0; i < 4; i++)
+	//{
+	//	target.draw(*this->walls[i], states);
+	//}
 }
 
 Vector2i Map::loadFromFile(lua_State* L, RenderWindow &window)
@@ -71,6 +77,7 @@ Vector2i Map::loadFromFile(lua_State* L, RenderWindow &window)
 		{
 			reloadSprites(L);
 			mapFound = checkPlayerSpawnArea();
+			mapFound = checkEnemySpawnArea();
 		}
 	}
 
@@ -90,7 +97,10 @@ void Map::reloadSprites(lua_State* L)
 	this->sizeXY = lua_tointeger(L, -1);
 	lua_pop(L, 1);
 
+	//this->addBarrier();
+
 	clearVector();
+	this->clearWalls();
 	reloadVectors();
 
 	for (int y = 0; y < this->map.size(); y++)
@@ -117,6 +127,7 @@ void Map::reloadSprites(lua_State* L)
 				break;
 			case 1:
 				this->map[y][x]->setTexture(this->wallTexture);
+				this->walls.push_back(this->map[y][x]);
 				break;
 			case 2:
 				this->map[y][x]->setTexture(this->waterTexture);
@@ -130,6 +141,7 @@ void Map::reloadSprites(lua_State* L)
 			}
 		}
 	}
+
 }
 
 void Map::reloadVectors()
@@ -160,6 +172,8 @@ void Map::clearVector()
 		this->map[y].clear();
 	}
 	this->map.clear();
+
+	//this->clearWalls();
 }
 
 bool Map::checkPlayerSpawnArea()
@@ -257,4 +271,81 @@ float Map::tileBottom(int x, int y)
 	float result;
 	result = this->map[x][y]->getPosition().y + 16.0;
 	return result;
+}
+
+vector<Sprite*> Map::getWalls()
+{
+	return this->walls;
+}
+
+void Map::resetTables(lua_State* L)
+{
+	lua_getglobal(L, "resetTables");
+	lua_pcall(L, 0, 0, 0);
+}
+
+void Map::resetMapFound()
+{
+	this->mapFound = false;
+}
+
+void Map::clearWalls()
+{
+	for (int x = 0; x < this->walls.size(); x++)
+	{
+		/*if (x < 4)
+		{
+			delete this->walls[x];
+		}*/
+		this->walls.pop_back();
+	}
+	this->walls.clear();
+}
+
+bool Map::checkEnemySpawnArea()
+{
+	int found = 0;
+	for (int y = 0; y < this->map.size(); y++ && found <= 1)
+	{
+		for (int x = 0; x < this->map[y].size(); x++ && found <= 1)
+		{
+			if (this->map[x][y]->getTexture() == &this->spawnEnemyTexture)
+			{
+				found++;
+			}
+		}
+	}
+
+	if (found < 1)
+	{
+		cout << "To few enemy spawns [Red Spawn Point]. Must have at least one Enemy Spawn Point." << endl;
+		return false;
+	}
+	return true;
+}
+
+void Map::addBarrier()
+{
+	Sprite* wallTemp[4];
+	for (int i = 0; i < 4; i++)
+	{
+		wallTemp[i] = new Sprite();
+		wallTemp[i]->setTexture(this->wallTexture);
+	}
+	wallTemp[0]->scale(1, sizeXY + 2); //Vänster till höger från top vänster
+	wallTemp[0]->setPosition(16, 16);
+
+	wallTemp[1]->scale(sizeXY + 2, 1); //upp till ner från top vänster
+	wallTemp[1]->setPosition(16, 16);
+
+	wallTemp[2]->scale(sizeXY + 2, 1); //Vänster till höger från nedre vänster
+	wallTemp[2]->setPosition((sizeXY * 16) + 32, 16);
+
+	wallTemp[3]->scale(1, sizeXY + 2); //upp till ner från top höger
+	wallTemp[3]->setPosition(16, (sizeXY * 16) + 32);
+
+	for (int i = 0; i < 4; i++)
+	{
+		this->walls.push_back(wallTemp[i]);
+	}
 }

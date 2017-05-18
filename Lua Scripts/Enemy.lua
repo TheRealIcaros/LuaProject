@@ -1,7 +1,7 @@
 dofile("../Lua Scripts/Vector.lua")
 
 Enemy = {pos = Vector:New({x = 50, y = 50}), 
-			speed = 50}
+			speed = 100}
 
 function Enemy:New(e)
 	e = e or {}

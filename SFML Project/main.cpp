@@ -12,7 +12,7 @@
 int main()
 {
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-	sf::RenderWindow window(sf::VideoMode(800, 800), "The legend of Lucas!");
+	sf::RenderWindow window(sf::VideoMode(320, 320), "The legend of Lucas!");
 	window.setFramerateLimit(60);
 
 	/*lua_State* L = luaL_newstate();

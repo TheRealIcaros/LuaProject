@@ -70,3 +70,15 @@ end
 function EntityHandler:setPlayerDir(x, y)
 	self.player1:setPlayerDir(x, y)
 end
+
+function EntityHandler:setCanMove(Up, Down, Left, Right)
+	self.player1:setCanMove(Up, Down, Left, Right)
+end
+
+function EntityHandler:movePlayerFromC(x, y, dt)
+	self.player1:movePlayerFromC(x, y, dt)
+end
+
+function EntityHandler:getCanMove()
+	return self.player1:getCanMove()
+end

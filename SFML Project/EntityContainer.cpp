@@ -140,3 +140,8 @@ void EntityContainer::setPlayerPos(lua_State* L, Vector2f pos)
 {
 	this->player.setPlayerPos(L, pos);
 }
+
+void EntityContainer::movePlayer(Vector2f move, lua_State* L, float dt)
+{
+	this->player.movePlayer(move, L, dt);
+}

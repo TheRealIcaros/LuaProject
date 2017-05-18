@@ -15,6 +15,8 @@ private:
 
 	bool mapFound = false;
 
+	vector<Sprite*> walls;
+
 	Vector2i playerSpawn;
 	vector<vector <Sprite*>> map;
 	int sizeXY;
@@ -41,5 +43,12 @@ public:
 	float tileRight(int x, int y);
 	float tileTop(int x, int y);
 	float tileBottom(int x, int y);
+
+	vector<Sprite*> getWalls();
+	void resetTables(lua_State* L);
+	void resetMapFound();
+	void clearWalls();
+	bool checkEnemySpawnArea();
+	void addBarrier();
 };
 #endif

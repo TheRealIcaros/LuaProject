@@ -22,6 +22,8 @@ private:
 	Editor edit;
 	Map map;
 
+	vector<Sprite*> walls;
+
 	//int lookDirection;
 	bool wasPressed;
 	int selectedBlock;
@@ -32,13 +34,20 @@ private:
 	Vector2i playerSpawn;
 	vector<Vector2i*> enemySpawnPoints;
 
+	bool temp = true;
+
+	bool canMoveUp = true;
+	bool canMoveDown = true;
+	bool canMoveLeft = true;
+	bool canMoveRight = true;
+
 public:
 	Game();
 	~Game();
 	void update(RenderWindow &window);
 	void draw(RenderTarget &target, RenderStates states)const;
 
-	void updateStartState();
+	void updateStartState(float dt);
 
 	void updateEditorState(RenderWindow &window);
 
@@ -47,9 +56,11 @@ public:
 
 	Vector2i* randomEnemySpawnPoint();
 
-	void playerTileCollision(lua_State* L);
+	void playerTileCollision(float dt, lua_State* L);
 	Vector2i getPlayArea();
 	bool place_freeX(float dt, RectangleShape rect1, Sprite* rect2, lua_State* L, Vector2f dir);
 	bool place_freeY(float dt, RectangleShape rect1, Sprite* rect2, lua_State* L, Vector2f dir);
+	void resizeWindow(RenderWindow &window, int size);
+	void clearWalls();
 };
 #endif // !
