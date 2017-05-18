@@ -34,10 +34,11 @@ public:
 	void updateSpriteAnimation();
 	void damageHp();
 	int getHp()const;
-	void setPlayerPosInLua(lua_State* L, Vector2i pos);
+	void setPlayerPosInLua(lua_State* L, Vector2f pos);
 	void checkAttacking(lua_State* L, float dt);
 	bool getIsSwinging()const;
 	RectangleShape getHitbox()const;
+	void setPlayerPos(lua_State* L, Vector2f pos);
 };
 
 #endif // !

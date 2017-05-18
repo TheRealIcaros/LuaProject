@@ -126,10 +126,17 @@ void EntityContainer::restart(lua_State* L)
 
 void EntityContainer::setPlayerSpawnPos(lua_State* L, Vector2i pos)
 {
-	this->player.setPlayerPosInLua(L, pos);
+	pos.x = pos.x * 16 + 32;
+	pos.y = pos.y * 16 + 32;
+	this->player.setPlayerPosInLua(L, Vector2f(pos.x, pos.y));
 }
 
 Player EntityContainer::getPlayer()const
 {
 	return this->player;
+}
+
+void EntityContainer::setPlayerPos(lua_State* L, Vector2f pos)
+{
+	this->player.setPlayerPos(L, pos);
 }

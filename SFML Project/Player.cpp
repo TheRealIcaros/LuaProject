@@ -143,11 +143,11 @@ int Player::getHp()const
 	return this->hp;
 }
 
-void Player::setPlayerPosInLua(lua_State* L, Vector2i pos)
+void Player::setPlayerPosInLua(lua_State* L, Vector2f pos)
 {
 	lua_getglobal(L, "setPlayerPos");
-	lua_pushinteger(L, pos.x);
-	lua_pushinteger(L, pos.y);
+	lua_pushnumber(L, pos.x);
+	lua_pushnumber(L, pos.y);
 	lua_pcall(L, 2, 0, 0);
 }
 
@@ -175,4 +175,14 @@ bool Player::getIsSwinging()const
 RectangleShape Player::getHitbox()const
 {
 	return this->hitbox;
+}
+
+void Player::setPlayerPos(lua_State* L, Vector2f pos)
+{
+	Vector2f move;
+	//move.x = this->spritePlayer.getPosition().x + pos.x;
+	//move.y = this->spritePlayer.getPosition().y + pos.y;
+	this->spritePlayer.setPosition(pos);
+
+	this->setPlayerPosInLua(L, pos);
 }

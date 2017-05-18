@@ -231,3 +231,30 @@ Sprite* Map::getSprite(Vector2i pos)const
 	return this->map[pos.x][pos.y];
 }
 
+float Map::tileLeft(int x, int y)
+{
+	float result;
+	result = this->map[x][y]->getPosition().x;
+	return result;
+}
+
+float Map::tileRight(int x, int y)
+{
+	float result;
+	result = this->map[x][y]->getPosition().x + 16.0;
+	return result;
+}
+
+float Map::tileTop(int x, int y)
+{
+	float result;
+	result = this->map[x][y]->getPosition().y;
+	return result;
+}
+
+float Map::tileBottom(int x, int y)
+{
+	float result;
+	result = this->map[x][y]->getPosition().y + 16.0;
+	return result;
+}

@@ -128,7 +128,10 @@ void Game::draw(RenderTarget &target, RenderStates states)const
 
 void Game::updateStartState()
 {
+	//Check Player Collision
 	this->playerTileCollision(L);
+
+	//Update Lua
 	lua_getglobal(this->L, "Update");
 	lua_pushnumber(this->L, this->dt.getElapsedTime().asSeconds());
 	int error = lua_pcall(this->L, 1, 0, 0);
@@ -137,6 +140,8 @@ void Game::updateStartState()
 		cout << "Update Error msg: " << lua_tostring(this->L, -1) << endl;
 		lua_pop(this->L, 1);
 	}
+
+	//Spawn Enemy
 	bool isPressed = Keyboard::isKeyPressed(Keyboard::O);
 	if (isPressed && !this->wasPressed)
 	{
@@ -144,10 +149,13 @@ void Game::updateStartState()
 		this->wasPressed = true;
 		et.addEnemy(this->L, enemySpawn->x, enemySpawn->y);
 	}
+
+	//Update Sprites
 	this->et.update(this->L, this->dt.getElapsedTime().asSeconds());
 
-	this->dt.restart();
 
+
+	this->dt.restart();
 	this->wasPressed = isPressed;
 }
 
@@ -233,12 +241,14 @@ void Game::playerTileCollision(lua_State* L)
 	Vector2f dir;
 	lua_getglobal(L, "getPlayerDir");
 	lua_pcall(L, 0, 2, 0);
-	if (lua_isinteger(L, -1) && lua_isinteger(L, -2))
+	if (lua_isnumber(L, -1) && lua_isnumber(L, -2))
 	{
-		dir.x = lua_tointeger(L, -1);
-		dir.y = lua_tointeger(L, -2);
+		dir.y = lua_tonumber(L, -1);
+		dir.x = lua_tonumber(L, -2);
 		lua_pop(L, 2);
 	}
+
+	//cout << dir.x << ", " << dir.y << endl;
 
 	Vector2i tile;
 	for (int y = -1; y < 2; y++)
@@ -268,33 +278,40 @@ void Game::playerTileCollision(lua_State* L)
 			//Player Move + Collision
 			if (this->map.CompareTexture(tile))
 			{
+				Vector2f pos(0.0, 0.0);
 				//cout << "Tile" << endl;
-				if (!this->place_free(this->dt.getElapsedTime().asSeconds(), this->et.getPlayer().getHitbox(), this->map.getSprite(tile), L, dir))
+				if (!this->place_freeX(this->dt.getElapsedTime().asSeconds(), this->et.getPlayer().getHitbox(), this->map.getSprite(tile), L, dir))
 				{
-					//cout << "Wall hit" << endl;
 					if (dir.x > 0.0)
 					{
-
+						pos.x = this->map.tileLeft(tile.x, tile.y) - 14;
+						pos.y = this->et.getPlayer().getHitbox().getPosition().y;
+						this->et.setPlayerPos(this->L, pos);
 					}
 					else if (dir.x < 0.0)
 					{
-
+						pos.x = this->map.tileRight(tile.x, tile.y) - 2;
+						pos.y = this->et.getPlayer().getHitbox().getPosition().y;
+						this->et.setPlayerPos(this->L, pos);
 					}
+					dir.x = 0.0;
+				}
+
+				if (!this->place_freeY(this->dt.getElapsedTime().asSeconds(), this->et.getPlayer().getHitbox(), this->map.getSprite(tile), L, dir))
+				{
 					if (dir.y > 0.0)
 					{
-
+						pos.x = this->et.getPlayer().getHitbox().getPosition().x;
+						pos.y = this->map.tileTop(tile.x, tile.y) - 14;
+						this->et.setPlayerPos(this->L, pos);
 					}
 					else if (dir.y < 0.0)
 					{
-
+						pos.x = this->et.getPlayer().getHitbox().getPosition().x;
+						pos.y = this->map.tileBottom(tile.x, tile.y) - 2;
+						this->et.setPlayerPos(this->L, pos);
 					}
-					dir.x = 0.0;
 					dir.y = 0.0;
-
-					/*lua_getglobal(L, "setPlayerDir");
-					lua_pushnumber(L, dir.x);
-					lua_pushnumber(L, dir.y);
-					lua_pcall(L, 2, 0, 0);*/
 				}
 			}
 		}
@@ -313,11 +330,25 @@ Vector2i Game::getPlayArea()
 	return result;
 }
 
-bool Game::place_free(float dt, RectangleShape rect1, Sprite* rect2, lua_State* L, Vector2f dir)
+bool Game::place_freeX(float dt, RectangleShape rect1, Sprite* rect2, lua_State* L, Vector2f dir)
 {
 	bool result = true;
 	
-	rect1.setPosition(rect1.getPosition() + (dt * 75 * dir));
+	rect1.setPosition(rect1.getPosition().x + (dt * 75 * dir.x), rect1.getPosition().y);
+
+	if (rect1.getGlobalBounds().intersects(rect2->getGlobalBounds()))
+	{
+		result = false;
+	}
+
+	return result;
+}
+
+bool Game::place_freeY(float dt, RectangleShape rect1, Sprite* rect2, lua_State* L, Vector2f dir)
+{
+	bool result = true;
+
+	rect1.setPosition(rect1.getPosition().x, rect1.getPosition().y + (dt * 75 * dir.y));
 
 	if (rect1.getGlobalBounds().intersects(rect2->getGlobalBounds()))
 	{

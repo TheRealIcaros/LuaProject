@@ -49,6 +49,7 @@ public:
 
 	void playerTileCollision(lua_State* L);
 	Vector2i getPlayArea();
-	bool place_free(float dt, RectangleShape rect1, Sprite* rect2, lua_State* L, Vector2f dir);
+	bool place_freeX(float dt, RectangleShape rect1, Sprite* rect2, lua_State* L, Vector2f dir);
+	bool place_freeY(float dt, RectangleShape rect1, Sprite* rect2, lua_State* L, Vector2f dir);
 };
 #endif // !

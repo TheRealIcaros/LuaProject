@@ -31,15 +31,12 @@ end
 
 --Update Movements
 function Player:updateMovement(dt)
-	--self.dir = Vector:New()
 	self.dir.x, self.dir.y, self.lookDirection = CheckMovement(self.lookDirection)
 
 	if((self.dir.x > 0 or self.dir.x < 0) and (self.dir.y > 0 or self.dir.y < 0))then
 		self.dir.x = self.dir.x * 0.707
 		self.dir.y = self.dir.y * 0.707
 	end
-		
-	
 
 	local movementLength = Vector:New({x = 0, y = 0})
 	movementLength = self.dir * self.speed * dt
@@ -54,8 +51,10 @@ end
 
 --Positions
 function Player:setPlayerPos(x, y)
-	self.pos.x = (x * 16) + 32
-	self.pos.y = (y * 16) + 32
+	--self.pos.x = (x * 16) + 32
+	--self.pos.y = (y * 16) + 32
+	self.pos.x = x
+	self.pos.y = y
 end
 
 function Player:getPlayerPos()

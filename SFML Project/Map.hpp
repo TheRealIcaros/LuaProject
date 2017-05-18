@@ -36,5 +36,10 @@ public:
 	int getMapSize()const;
 	bool CompareTexture(Vector2i pos);
 	Sprite* getSprite(Vector2i pos)const;
+
+	float tileLeft(int x, int y);
+	float tileRight(int x, int y);
+	float tileTop(int x, int y);
+	float tileBottom(int x, int y);
 };
 #endif

@@ -32,6 +32,7 @@ public:
 	void setPlayerSpawnPos(lua_State* L, Vector2i pos);
 
 	Player getPlayer()const;
+	void setPlayerPos(lua_State* L, Vector2f pos);
 };
 
 #endif // !
