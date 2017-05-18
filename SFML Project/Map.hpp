@@ -16,6 +16,7 @@ private:
 	bool mapFound = false;
 
 	vector<Sprite*> walls;
+	vector<RectangleShape*> barrier;
 
 	Vector2i playerSpawn;
 	vector<vector <Sprite*>> map;
@@ -50,5 +51,6 @@ public:
 	void clearWalls();
 	bool checkEnemySpawnArea();
 	void addBarrier();
+	void clearBarrier();
 };
 #endif

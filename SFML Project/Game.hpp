@@ -24,6 +24,7 @@ private:
 
 	vector<Sprite*> walls;
 
+
 	//int lookDirection;
 	bool wasPressed;
 	int selectedBlock;

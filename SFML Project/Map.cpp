@@ -31,6 +31,7 @@ Map::~Map()
 {
 	this->clearVector();
 	this->clearWalls();
+	this->clearBarrier();
 }
 
 void Map::update(RenderWindow &window)
@@ -46,10 +47,10 @@ void Map::draw(RenderTarget &target, RenderStates states)const
 			target.draw(*this->map[y][x], states);
 		}
 	}
-	//for (int i = 0; i < 4; i++)
-	//{
-	//	target.draw(*this->walls[i], states);
-	//}
+	for (int i = 0; i < 4; i++)
+	{
+		target.draw(*this->barrier[i], states);
+	}
 }
 
 Vector2i Map::loadFromFile(lua_State* L, RenderWindow &window)
@@ -97,10 +98,10 @@ void Map::reloadSprites(lua_State* L)
 	this->sizeXY = lua_tointeger(L, -1);
 	lua_pop(L, 1);
 
-	//this->addBarrier();
+	this->addBarrier();
 
 	clearVector();
-	this->clearWalls();
+	//this->clearWalls();
 	reloadVectors();
 
 	for (int y = 0; y < this->map.size(); y++)
@@ -293,10 +294,6 @@ void Map::clearWalls()
 {
 	for (int x = 0; x < this->walls.size(); x++)
 	{
-		/*if (x < 4)
-		{
-			delete this->walls[x];
-		}*/
 		this->walls.pop_back();
 	}
 	this->walls.clear();
@@ -326,26 +323,44 @@ bool Map::checkEnemySpawnArea()
 
 void Map::addBarrier()
 {
-	Sprite* wallTemp[4];
+	RectangleShape* wallTemp[4];
 	for (int i = 0; i < 4; i++)
 	{
-		wallTemp[i] = new Sprite();
-		wallTemp[i]->setTexture(this->wallTexture);
+		//wallTemp[i] = new Sprite();
+		wallTemp[i] = new RectangleShape();
+		//wallTemp[i]->setTexture(&wallTexture, true);
 	}
-	wallTemp[0]->scale(1, sizeXY + 2); //Vänster till höger från top vänster
+
+	wallTemp[0]->setSize(Vector2f(16, (sizeXY + 2) * 16)); //Vänster till höger från top vänster
 	wallTemp[0]->setPosition(16, 16);
 
-	wallTemp[1]->scale(sizeXY + 2, 1); //upp till ner från top vänster
+	wallTemp[1]->setSize(Vector2f((sizeXY + 2) * 16, 16)); //upp till ner från top vänster
 	wallTemp[1]->setPosition(16, 16);
 
-	wallTemp[2]->scale(sizeXY + 2, 1); //Vänster till höger från nedre vänster
+	wallTemp[2]->setSize(Vector2f((sizeXY + 2) * 16, 16)); //Vänster till höger från nedre vänster
 	wallTemp[2]->setPosition((sizeXY * 16) + 32, 16);
 
-	wallTemp[3]->scale(1, sizeXY + 2); //upp till ner från top höger
+	wallTemp[3]->setSize(Vector2f(16, (sizeXY + 2) * 16)); //upp till ner från top höger
 	wallTemp[3]->setPosition(16, (sizeXY * 16) + 32);
 
 	for (int i = 0; i < 4; i++)
 	{
-		this->walls.push_back(wallTemp[i]);
+		wallTemp[i]->setTexture(&wallTexture, true);
 	}
+
+	for (int i = 0; i < 4; i++)
+	{
+		this->barrier.push_back(wallTemp[i]);
+	}
+}
+
+void Map::clearBarrier()
+{
+	for (int x = 0; x < this->barrier.size(); x++)
+	{
+
+		delete this->barrier[x];
+
+	}
+	this->barrier.clear();
 }
