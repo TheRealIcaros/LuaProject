@@ -45,10 +45,10 @@ Game::Game() : edit()
 
 Game::~Game()
 {
-	for (int x = 0; x < this->enemySpawnPoints.size(); x++)
+	/*for (int x = 0; x < this->enemySpawnPoints.size(); x++)
 	{
 		delete this->enemySpawnPoints[x];
-	}
+	}*/
 
 	this->enemySpawnPoints.clear();
 
@@ -69,7 +69,7 @@ void Game::update(RenderWindow &window)
 		this->editorStateOn = false;
 
 		this->map.clearVector();
-		this->clearWalls();
+		//this->clearWalls();
 		this->map.resetTables(this->L);
 		this->map.resetMapFound();
 
@@ -93,7 +93,7 @@ void Game::update(RenderWindow &window)
 
 				this->resizeWindow(window, map.getMapSize());
 
-				this->walls = this->map.getWalls();
+				//this->walls = this->map.getWalls();
 
 				this->et.setPlayerSpawnPos(this->L, this->playerSpawn);
 				this->enemySpawnPoints = this->map.findEnemySpawnPoints();
@@ -165,9 +165,9 @@ void Game::updateStartState(float dt)
 	bool isPressed = Keyboard::isKeyPressed(Keyboard::O);
 	if (isPressed && !this->wasPressed)
 	{
-		Vector2i* enemySpawn = randomEnemySpawnPoint();
+		Vector2i enemySpawn = randomEnemySpawnPoint();
 		this->wasPressed = true;
-		et.addEnemy(this->L, enemySpawn->x, enemySpawn->y);
+		et.addEnemy(this->L, enemySpawn.x, enemySpawn.y);
 	}
 
 	//Update Sprites
@@ -235,7 +235,7 @@ int Game::CheckMovement(lua_State* L)
 	}
 }
 
-Vector2i* Game::randomEnemySpawnPoint()
+Vector2i Game::randomEnemySpawnPoint()
 {
 	/*default_random_engine generator;
 	uniform_int_distribution<int> distribution(0, this->enemySpawnPoints.size());
@@ -267,32 +267,100 @@ void Game::playerTileCollision(float dt, lua_State* L)
 		lua_pop(L, 2);
 	}
 
-	for (int i = 0; i < this->map.getWalls().size(); i++)
+	Vector2i tile;
+	for (int x = -1; x < 2; x++)
 	{
-		if (this->et.getPlayer().getHitbox().getGlobalBounds().intersects(this->walls.at(i)->getGlobalBounds()))
+		tile.x = this->getPlayArea().x + x;
+
+		if (tile.x > this->map.getMapSize() - 1)
 		{
-			if (dir.y < 0.0)
+			tile.x = 0;
+		}
+		else if (tile.x < 0)
+		{
+			tile.x = this->map.getMapSize() - 1;
+		}
+
+		for (int y = -1; y < 2; y++)
+		{
+			tile.y = this->getPlayArea().y + y;
+			if (tile.y > this->map.getMapSize() - 1)
 			{
-				canMoveUp = false;
-				this->et.movePlayer(Vector2f(0, -dir.y), L, dt);
+				tile.y = 0;
 			}
-			else if (dir.y > 0.0) //Down
+			else if (tile.y < 0)
 			{
-				canMoveDown = false;
-				this->et.movePlayer(Vector2f(0, -dir.y), L, dt);
+				tile.y = this->map.getMapSize() - 1;
 			}
-			else if (dir.x < 0.0) //Left
+
+			if (this->map.CompareTexture(tile))
 			{
-				canMoveLeft = false;
-				this->et.movePlayer(Vector2f(-dir.x, 0), L, dt);
-			}
-			else if (dir.x > 0.0) //Right
-			{
-				canMoveRight = false;
-				this->et.movePlayer(Vector2f(-dir.x, 0), L, dt);
+				if (this->et.getPlayer().getHitbox().getGlobalBounds().intersects(this->map.getSprite(tile)->getGlobalBounds())) //this->walls.at(i)->getGlobalBounds()))				
+				{
+					Vector2f pos;
+					if (dir.y < 0.0)
+					{
+						canMoveUp = false;
+						pos.x = this->et.getPlayer().getSprite().getPosition().x;
+						pos.y = this->map.tileBottom(tile.x, tile.y) - 2;
+						this->et.setPlayerPos(L, pos);
+						//this->et.movePlayer(Vector2f(0, -dir.y), L, dt);
+					}
+					else if (dir.y > 0.0) //Down
+					{
+						canMoveDown = false;
+						pos.x = this->et.getPlayer().getSprite().getPosition().x;
+						pos.y = this->map.tileTop(tile.x, tile.y) - 16;
+						this->et.setPlayerPos(L, pos);
+						//this->et.movePlayer(Vector2f(0, -dir.y), L, dt);
+					}
+					else if (dir.x < 0.0) //Left
+					{
+						canMoveLeft = false;
+						pos.y = this->et.getPlayer().getSprite().getPosition().y;
+						pos.x = this->map.tileRight(tile.x, tile.y) - 3;
+						this->et.setPlayerPos(L, pos);
+						//this->et.movePlayer(Vector2f(-dir.x, 0), L, dt);
+					}
+					else if (dir.x > 0.0) //Right
+					{
+						canMoveRight = false;
+						pos.y = this->et.getPlayer().getSprite().getPosition().y;
+						pos.x = this->map.tileLeft(tile.x, tile.y) - 13;
+						this->et.setPlayerPos(L, pos);
+						//this->et.movePlayer(Vector2f(-dir.x, 0), L, dt);
+					}
+				}
 			}
 		}
 	}
+
+	//for (int i = 0; i < this->map.getWalls().size(); i++)
+	//{
+	//	if (this->et.getPlayer().getHitbox().getGlobalBounds().intersects(this->walls.at(i)->getGlobalBounds()))
+	//	{
+	//		if (dir.y < 0.0)
+	//		{
+	//			canMoveUp = false;
+	//			this->et.movePlayer(Vector2f(0, -dir.y), L, dt);
+	//		}
+	//		else if (dir.y > 0.0) //Down
+	//		{
+	//			canMoveDown = false;
+	//			this->et.movePlayer(Vector2f(0, -dir.y), L, dt);
+	//		}
+	//		else if (dir.x < 0.0) //Left
+	//		{
+	//			canMoveLeft = false;
+	//			this->et.movePlayer(Vector2f(-dir.x, 0), L, dt);
+	//		}
+	//		else if (dir.x > 0.0) //Right
+	//		{
+	//			canMoveRight = false;
+	//			this->et.movePlayer(Vector2f(-dir.x, 0), L, dt);
+	//		}
+	//	}
+	//}
 
 	lua_getglobal(L, "setCanMove");
 	lua_pushboolean(L, canMoveUp);
@@ -385,9 +453,9 @@ void Game::resizeWindow(RenderWindow &window, int size)
 
 void Game::clearWalls()
 {
-	for (int x = 0; x < this->walls.size(); x++)
+	/*for (int x = 0; x < this->walls.size(); x++)
 	{
 		this->walls.pop_back();
 	}
-	this->walls.clear();
+	this->walls.clear();*/
 }

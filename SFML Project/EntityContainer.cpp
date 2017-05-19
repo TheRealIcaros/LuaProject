@@ -104,6 +104,9 @@ void EntityContainer::playerAttackEnemyColition(lua_State* L, int i)
 		lua_getglobal(L, "killEnemy");
 		lua_pushinteger(L, i);
 		lua_pcall(L, 1, 0, 0);
+
+		lua_getglobal(L, "increaseKills");
+		lua_pcall(L, 0, 0, 0);
 	}
 }
 

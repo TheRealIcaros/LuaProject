@@ -22,7 +22,7 @@ private:
 	Editor edit;
 	Map map;
 
-	vector<Sprite*> walls;
+	//vector<Sprite*> walls;
 
 
 	//int lookDirection;
@@ -33,7 +33,7 @@ private:
 	bool editorStateOn;
 
 	Vector2i playerSpawn;
-	vector<Vector2i*> enemySpawnPoints;
+	vector<Vector2i> enemySpawnPoints;
 
 	bool temp = true;
 
@@ -55,7 +55,7 @@ public:
 	static int playerIsAttacking(lua_State* L);
 	static int CheckMovement(lua_State* L);
 
-	Vector2i* randomEnemySpawnPoint();
+	Vector2i randomEnemySpawnPoint();
 
 	void playerTileCollision(float dt, lua_State* L);
 	Vector2i getPlayArea();

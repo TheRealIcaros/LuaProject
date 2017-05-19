@@ -82,3 +82,11 @@ end
 function EntityHandler:getCanMove()
 	return self.player1:getCanMove()
 end
+
+function EntityHandler:increaseKills()
+	self.player1:increaseKills()
+end
+
+function EntityHandler:getKills()
+	return self.player1:getKills()
+end

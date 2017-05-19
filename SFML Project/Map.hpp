@@ -12,11 +12,13 @@ private:
 	Texture spawnEnemyTexture;
 	Texture spawnPlayerTexture;
 
+	Font font;
+	Text playerKills;
 
 	bool mapFound = false;
 
-	vector<Sprite*> walls;
-	vector<RectangleShape*> barrier;
+	//vector<Sprite*> walls;
+	//vector<RectangleShape*> barrier;
 
 	Vector2i playerSpawn;
 	vector<vector <Sprite*>> map;
@@ -34,7 +36,7 @@ public:
 	void reloadVectors();
 	void clearVector();
 	bool checkPlayerSpawnArea();
-	vector<Vector2i*> findEnemySpawnPoints();
+	vector<Vector2i> findEnemySpawnPoints();
 
 	int getMapSize()const;
 	bool CompareTexture(Vector2i pos);
@@ -45,10 +47,10 @@ public:
 	float tileTop(int x, int y);
 	float tileBottom(int x, int y);
 
-	vector<Sprite*> getWalls();
+	//vector<Sprite*> getWalls();
 	void resetTables(lua_State* L);
 	void resetMapFound();
-	void clearWalls();
+	//void clearWalls();
 	bool checkEnemySpawnArea();
 	void addBarrier();
 	void clearBarrier();

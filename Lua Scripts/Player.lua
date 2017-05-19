@@ -8,7 +8,8 @@ Player = {pos = Vector:New({x = 200, y = 200}),
 			canMoveUp = true,
 			canMoveDown = true,
 			canMoveLeft = true,
-			canMoveRight = true}
+			canMoveRight = true,
+			kills = 0}
 
 function Player:New(p)
 	p = p or {}
@@ -141,4 +142,12 @@ end
 
 function Player:getCanMove()
 	return self.canMoveUp, self.canMoveDown, self.canMoveLeft, self.canMoveRight
+end
+
+function Player:increaseKills()
+	self.kills = self.kills + 1
+end
+
+function Player:getKills()
+	return self.kills
 end
