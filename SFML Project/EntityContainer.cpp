@@ -8,6 +8,8 @@ EntityContainer::EntityContainer()
 EntityContainer::EntityContainer(lua_State* L)
 {
 	this->player = Player();
+
+	int kills = 0;
 	//this->enemys = vector<Enemy>();
 
 	//this->enemys = new Enemy*[this->cap];
@@ -107,6 +109,8 @@ void EntityContainer::playerAttackEnemyColition(lua_State* L, int i)
 
 		lua_getglobal(L, "increaseKills");
 		lua_pcall(L, 0, 0, 0);
+
+		this->kills++;
 	}
 }
 
@@ -147,4 +151,9 @@ void EntityContainer::setPlayerPos(lua_State* L, Vector2f pos)
 void EntityContainer::movePlayer(Vector2f move, lua_State* L, float dt)
 {
 	this->player.movePlayer(move, L, dt);
+}
+
+int EntityContainer::getKills()const
+{
+	return this->kills;
 }

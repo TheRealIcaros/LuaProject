@@ -15,6 +15,8 @@ private:
 
 	Texture texturePlayer;
 
+	int kills;
+
 public:
 	EntityContainer();
 	EntityContainer(lua_State* L);
@@ -35,6 +37,7 @@ public:
 	void setPlayerPos(lua_State* L, Vector2f pos);
 
 	void movePlayer(Vector2f move, lua_State* L, float dt);
+	int getKills()const;
 };
 
 #endif // !

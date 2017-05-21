@@ -16,11 +16,19 @@ private:
 	Sprite editor;
 	Sprite exit;
 
+	Texture heartTexture;
+	Sprite heart;
+
 	lua_State* L;
 	EntityContainer et;
 	Clock dt;
 	Editor edit;
 	Map map;
+
+	Font font;
+	Text playerKills;
+
+	int kills = 0;
 
 	//vector<Sprite*> walls;
 
@@ -63,5 +71,7 @@ public:
 	bool place_freeY(float dt, RectangleShape rect1, Sprite* rect2, lua_State* L, Vector2f dir);
 	void resizeWindow(RenderWindow &window, int size);
 	void clearWalls();
+	void drawText(RenderWindow &window);
+	void UppdateKills();
 };
 #endif // !

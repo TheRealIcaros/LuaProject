@@ -38,6 +38,7 @@ int main()
 
 		window.clear();
 		window.draw(g);
+		g.drawText(window);
 		window.display();
 	}
 

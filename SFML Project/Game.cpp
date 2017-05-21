@@ -14,6 +14,13 @@ Game::Game() : edit()
 	this->exit.setTexture(this->exitTexture);
 	this->exit.setPosition(Vector2f(60.0f, 228.0f));
 
+	this->heartTexture.loadFromFile("../Images/HeartSpriteSheettest2.png");
+	this->heart.setTexture(this->heartTexture);
+	this->heart.setTextureRect(sf::IntRect(0, 0, 96, 32));
+	this->heart.setPosition(Vector2f((16 - 6) * 16, 0));
+
+
+
 	this->L = luaL_newstate();
 	luaL_openlibs(this->L);
 
@@ -41,6 +48,19 @@ Game::Game() : edit()
 
 	this->startStateOn = false;
 	this->editorStateOn = false;
+
+	//text
+	if (!this->font.loadFromFile("../Font/BebasNeue.otf"))
+		cout << "Can't find font" << endl;
+
+	//Set the font to text
+	this->playerKills.setFont(font);
+
+	this->playerKills.setString("Kills: 0");
+	this->playerKills.setCharacterSize(25);
+	this->playerKills.setFillColor(sf::Color::Red);
+	this->playerKills.setPosition(0.0, 0.0);
+	this->playerKills.setStyle(sf::Text::Bold);
 }
 
 Game::~Game()
@@ -97,6 +117,8 @@ void Game::update(RenderWindow &window)
 
 				this->et.setPlayerSpawnPos(this->L, this->playerSpawn);
 				this->enemySpawnPoints = this->map.findEnemySpawnPoints();
+				//set heart pos on screan
+				this->heart.setPosition(Vector2f((this->map.getMapSize() - 2) * 16, 0));
 			}
 			if (this->editor.getGlobalBounds().contains(window.mapPixelToCoords(Mouse::getPosition(window))))
 			{
@@ -138,6 +160,7 @@ void Game::draw(RenderTarget &target, RenderStates states)const
 	{
 		target.draw(this->map, states);
 		target.draw(this->et, states);
+		target.draw(this->heart, states);
 	}
 
 	if (this->editorStateOn)
@@ -148,6 +171,7 @@ void Game::draw(RenderTarget &target, RenderStates states)const
 
 void Game::updateStartState(float dt)
 {
+	UppdateKills();
 	//Check Player Collision
 	this->playerTileCollision(dt, L);
 
@@ -458,4 +482,21 @@ void Game::clearWalls()
 		this->walls.pop_back();
 	}
 	this->walls.clear();*/
+}
+
+void Game::drawText(RenderWindow &window)
+{
+	if (startStateOn)
+	{
+		window.draw(playerKills);
+	}
+}
+
+void Game::UppdateKills()
+{
+	kills = this->et.getKills();
+
+	stringstream temp;
+	temp << "kills: " << kills;
+	this->playerKills.setString(temp.str());
 }

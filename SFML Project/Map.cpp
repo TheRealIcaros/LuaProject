@@ -1,4 +1,5 @@
 #include "Map.hpp"
+#include <SFML\Graphics\Font.hpp>
 
 Map::Map()
 {
@@ -24,12 +25,19 @@ Map::Map()
 		cout << "Spawnpoint player image not found!" << endl;
 	}
 
-	if (!this->font.loadFromFile("../Font/BebasNeue.otf"))
-		cout << "Can't find font" << endl;
+	//if (!this->font.loadFromFile("../Font/BebasNeue.otf"))
+	//	cout << "Can't find font" << endl;
 
-	this->playerKills.setString("Hello Here I Am!");
-	this->playerKills.setCharacterSize(50);
-	this->playerKills.setPosition(50.0, 50.0);
+	////Set the font to text
+	//this->playerKills.setFont(font);
+
+	//this->playerKills.setString("Hello Will I Am!");
+	//this->playerKills.setCharacterSize(50);
+	//this->playerKills.setFillColor(sf::Color::Red);
+	//this->playerKills.setPosition(0.0, 0.0);
+	//this->playerKills.setStyle(sf::Text::Bold | sf::Text::Underlined);
+
+
 
 	this->reloadVectors();
 }
@@ -58,7 +66,8 @@ void Map::draw(RenderTarget &target, RenderStates states)const
 	{
 		//target.draw(*this->barrier[i], states);
 	}
-	target.draw(this->playerKills, states);
+
+	//target.draw(this->playerKills, states);
 }
 
 Vector2i Map::loadFromFile(lua_State* L, RenderWindow &window)
