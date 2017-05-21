@@ -49,7 +49,6 @@ function getMaterial(x, y)
 end
 
 function printToTxt(name)
---function Editor.printToTxt(self, name)
 	local file = io.open("..\\Map\\" .. name .. ".txt", "w")
 	
 	file:write(editor.size, "\n")

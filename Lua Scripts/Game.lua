@@ -90,3 +90,7 @@ end
 function getHp()
 	return entityHandler:getHp()
 end
+
+function isOnWater(onWater)
+	EntityHandler:isOnWater(onWater)
+end

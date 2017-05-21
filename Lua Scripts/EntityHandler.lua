@@ -96,3 +96,7 @@ end
 function EntityHandler:getHp()
 	return self.player:getHp()
 end
+
+function EntityHandler:isOnWater(onWater)
+	self.player:isOnWater(onWater)
+end

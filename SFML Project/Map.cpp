@@ -213,8 +213,6 @@ vector<Vector2i> Map::findEnemySpawnPoints()
 			}
 		}
 	}
-
-	cout << enemySpawnPoints.size() << endl;
 	return enemySpawnPoints;
 }
 
@@ -223,13 +221,23 @@ int Map::getMapSize()const
 	return this->sizeXY;
 }
 
-bool Map::CompareTexture(Vector2i pos)
+bool Map::CompareTexture(Vector2i pos, int texture)
 {
 	bool result = false;
 
-	if (this->map[pos.x][pos.y]->getTexture() == &this->wallTexture)
+	if (texture == 1)
 	{
-		result = true;
+		if (this->map[pos.x][pos.y]->getTexture() == &this->wallTexture)
+		{
+			result = true;
+		}
+	}
+	else if (texture == 2)
+	{
+		if (this->map[pos.x][pos.y]->getTexture() == &this->waterTexture)
+		{
+			result = true;
+		}
 	}
 
 	return result;

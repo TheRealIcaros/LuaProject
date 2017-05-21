@@ -10,7 +10,9 @@ Player = {pos = Vector:New({x = 200, y = 200}),
 			canMoveLeft = true,
 			canMoveRight = true,
 			kills = 0,
-			hp = 3}
+			hp = 3,
+			waterSpeed = 75,
+			onWater = false}
 
 function Player:New(p)
 	p = p or {}
@@ -112,7 +114,6 @@ function Player:setPlayerDir(x, y)
 end
 
 function Player:setCanMove(Up, Down, Left, Right)
-print(Up .. " , " .. Down .. " , " .. Left .. " , " .. Up)
 	self.canMoveUp = Up
 	self.canMoveDown = Down
 	self.canMoveLeft = Left
@@ -126,7 +127,14 @@ end
 
 function Player:calculateMovementLength(dt)
 	local movementLength = Vector:New({x = 0, y = 0})
-	movementLength = self.dir * self.speed * dt
+
+	if(self.onWater)then
+		movementLength = self.dir * self.waterSpeed * dt
+	else
+		movementLength = self.dir * self.speed * dt
+	end
+
+	print(movementLength)
 
 	return movementLength
 end
@@ -159,4 +167,8 @@ end
 
 function Player:getHp()
 	return self.hp
+end
+
+function Player:isOnWater(onWater)
+	self.onWater = onWater
 end

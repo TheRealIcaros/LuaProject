@@ -60,7 +60,6 @@ void EntityContainer::draw(RenderTarget &target, RenderStates states)const
 
 void EntityContainer::addEnemy(lua_State* L, float x, float y)
 {
-	cout << x << ", " << y << endl;
 	lua_getglobal(L, "addEnemy");
 	lua_pushnumber(L, x);
 	lua_pushnumber(L, y);
@@ -89,8 +88,6 @@ void EntityContainer::playerAttackEnemyColition(lua_State* L, int i)
 {
 	if (this->player.getSprite().getGlobalBounds().intersects(this->enemys[i]->getSprite().getGlobalBounds()))
 	{
-		cout << "Player Hit Enemy" << endl;
-
 		Enemy *temp;
 
 		temp = this->enemys.at(i);

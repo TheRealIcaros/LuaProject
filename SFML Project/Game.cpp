@@ -334,14 +334,43 @@ void Game::playerTileCollision(float dt, lua_State* L)
 				tile.y = this->map.getMapSize() - 1;
 			}
 
-			if (this->map.CompareTexture(tile))
+			if (this->map.CompareTexture(tile, 1))
 			{
-				if (this->et.getPlayer().getHitbox().getGlobalBounds().intersects(this->map.getSprite(tile)->getGlobalBounds())) //this->walls.at(i)->getGlobalBounds()))				
+				if (this->et.getPlayer().getHitbox().getGlobalBounds().intersects(this->map.getSprite(tile)->getGlobalBounds()))		
 				{
 					this->collisionTile(dir, tile);
 				}
 			}
 		}
+	}
+	Vector2i temp = this->getPlayArea();
+	if (temp.x > this->map.getMapSize() - 1)
+	{
+		temp.x = 0;
+	}
+	else if (temp.x < 0)
+	{
+		temp.x = this->map.getMapSize() - 1;
+	}
+	if (temp.y > this->map.getMapSize() - 1)
+	{
+		temp.y = 0;
+	}
+	else if (temp.y < 0)
+	{
+		temp.y = this->map.getMapSize() - 1;
+	}
+	if (this->map.CompareTexture(temp, 2))
+	{
+		lua_getglobal(this->L, "isOnWater");
+		lua_pushboolean(this->L, true);
+		lua_pcall(this->L, 1, 0, 0);
+	}
+	else
+	{
+		lua_getglobal(this->L, "isOnWater");
+		lua_pushboolean(this->L, false);
+		lua_pcall(this->L, 1, 0, 0);
 	}
 	for (int i = 0; i < 4; i++)
 	{

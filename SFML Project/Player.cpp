@@ -141,8 +141,6 @@ void Player::damageHp()
 	{
 		this->hp = hp--;
 	}
-	if (this->hp == 0)
-		cout << "You are dead! LOSER!" << endl;
 }
 
 int Player::getHp()const

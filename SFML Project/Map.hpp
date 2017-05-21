@@ -38,7 +38,7 @@ public:
 	vector<Vector2i> findEnemySpawnPoints();
 
 	int getMapSize()const;
-	bool CompareTexture(Vector2i pos);
+	bool CompareTexture(Vector2i pos, int texture);
 	Sprite* getSprite(Vector2i pos)const;
 
 	float tileLeft(int x, int y);
