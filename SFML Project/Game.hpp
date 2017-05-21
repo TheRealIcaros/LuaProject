@@ -70,5 +70,7 @@ public:
 	void drawText(RenderWindow &window);
 	void updateKills(lua_State* L);
 	void displayDeadScreen(RenderWindow& window);
+	void collisionTile(Vector2f dir, Vector2i tile);
+	void collisionBarrier(Vector2f dir, int i);
 };
 #endif // !

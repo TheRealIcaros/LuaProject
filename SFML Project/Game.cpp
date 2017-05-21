@@ -51,7 +51,7 @@ Game::Game() : edit()
 	this->playerKills.setFont(font);
 
 	this->playerKills.setString("Kills: 0");
-	this->playerKills.setCharacterSize(25);
+	this->playerKills.setCharacterSize(15);
 	this->playerKills.setFillColor(sf::Color::Red);
 	this->playerKills.setPosition(0.0, 0.0);
 	this->playerKills.setStyle(sf::Text::Bold);
@@ -327,70 +327,18 @@ void Game::playerTileCollision(float dt, lua_State* L)
 			{
 				if (this->et.getPlayer().getHitbox().getGlobalBounds().intersects(this->map.getSprite(tile)->getGlobalBounds())) //this->walls.at(i)->getGlobalBounds()))				
 				{
-					Vector2f pos;
-					if (dir.y < 0.0)
-					{
-						canMoveUp = false;
-						pos.x = this->et.getPlayer().getSprite().getPosition().x;
-						pos.y = this->map.tileBottom(tile.x, tile.y) - 2;
-						this->et.setPlayerPos(L, pos);
-						//this->et.movePlayer(Vector2f(0, -dir.y), L, dt);
-					}
-					else if (dir.y > 0.0) //Down
-					{
-						canMoveDown = false;
-						pos.x = this->et.getPlayer().getSprite().getPosition().x;
-						pos.y = this->map.tileTop(tile.x, tile.y) - 16;
-						this->et.setPlayerPos(L, pos);
-						//this->et.movePlayer(Vector2f(0, -dir.y), L, dt);
-					}
-					else if (dir.x < 0.0) //Left
-					{
-						canMoveLeft = false;
-						pos.y = this->et.getPlayer().getSprite().getPosition().y;
-						pos.x = this->map.tileRight(tile.x, tile.y) - 3;
-						this->et.setPlayerPos(L, pos);
-						//this->et.movePlayer(Vector2f(-dir.x, 0), L, dt);
-					}
-					else if (dir.x > 0.0) //Right
-					{
-						canMoveRight = false;
-						pos.y = this->et.getPlayer().getSprite().getPosition().y;
-						pos.x = this->map.tileLeft(tile.x, tile.y) - 13;
-						this->et.setPlayerPos(L, pos);
-						//this->et.movePlayer(Vector2f(-dir.x, 0), L, dt);
-					}
+					this->collisionTile(dir, tile);
 				}
 			}
 		}
 	}
-
-	//for (int i = 0; i < this->map.getWalls().size(); i++)
-	//{
-	//	if (this->et.getPlayer().getHitbox().getGlobalBounds().intersects(this->walls.at(i)->getGlobalBounds()))
-	//	{
-	//		if (dir.y < 0.0)
-	//		{
-	//			canMoveUp = false;
-	//			this->et.movePlayer(Vector2f(0, -dir.y), L, dt);
-	//		}
-	//		else if (dir.y > 0.0) //Down
-	//		{
-	//			canMoveDown = false;
-	//			this->et.movePlayer(Vector2f(0, -dir.y), L, dt);
-	//		}
-	//		else if (dir.x < 0.0) //Left
-	//		{
-	//			canMoveLeft = false;
-	//			this->et.movePlayer(Vector2f(-dir.x, 0), L, dt);
-	//		}
-	//		else if (dir.x > 0.0) //Right
-	//		{
-	//			canMoveRight = false;
-	//			this->et.movePlayer(Vector2f(-dir.x, 0), L, dt);
-	//		}
-	//	}
-	//}
+	for (int i = 0; i < 4; i++)
+	{
+		if (this->et.getPlayer().getHitbox().getGlobalBounds().intersects(this->map.getBarrier(i)->getGlobalBounds()))
+		{
+			this->collisionBarrier(dir, i);
+		}
+	}
 
 	lua_getglobal(L, "setCanMove");
 	lua_pushboolean(L, canMoveUp);
@@ -544,4 +492,78 @@ void Game::displayDeadScreen(RenderWindow& window)
 	system("Pause");
 
 	this->et.setPlayerDead(false);
+}
+
+void Game::collisionTile(Vector2f dir, Vector2i tile)
+{
+	Vector2f pos;
+	if (dir.y < 0.0)
+	{
+		canMoveUp = false;
+		pos.x = this->et.getPlayer().getSprite().getPosition().x;
+		pos.y = this->map.tileBottom(tile.x, tile.y) - 2;
+		this->et.setPlayerPos(L, pos);
+		//this->et.movePlayer(Vector2f(0, -dir.y), L, dt);
+	}
+	else if (dir.y > 0.0) //Down
+	{
+		canMoveDown = false;
+		pos.x = this->et.getPlayer().getSprite().getPosition().x;
+		pos.y = this->map.tileTop(tile.x, tile.y) - 16;
+		this->et.setPlayerPos(L, pos);
+		//this->et.movePlayer(Vector2f(0, -dir.y), L, dt);
+	}
+	else if (dir.x < 0.0) //Left
+	{
+		canMoveLeft = false;
+		pos.y = this->et.getPlayer().getSprite().getPosition().y;
+		pos.x = this->map.tileRight(tile.x, tile.y) - 3;
+		this->et.setPlayerPos(L, pos);
+		//this->et.movePlayer(Vector2f(-dir.x, 0), L, dt);
+	}
+	else if (dir.x > 0.0) //Right
+	{
+		canMoveRight = false;
+		pos.y = this->et.getPlayer().getSprite().getPosition().y;
+		pos.x = this->map.tileLeft(tile.x, tile.y) - 13;
+		this->et.setPlayerPos(L, pos);
+		//this->et.movePlayer(Vector2f(-dir.x, 0), L, dt);
+	}
+}
+
+void Game::collisionBarrier(Vector2f dir, int i)
+{
+	Vector2f pos;
+	if (dir.y < 0.0)
+	{
+		canMoveUp = false;
+		pos.x = this->et.getPlayer().getSprite().getPosition().x;
+		pos.y = this->map.getBarrier(i)->getPosition().x + 16 - 2;
+		this->et.setPlayerPos(L, pos);
+		//this->et.movePlayer(Vector2f(0, -dir.y), L, dt);
+	}
+	else if (dir.y > 0.0) //Down
+	{
+		canMoveDown = false;
+		pos.x = this->et.getPlayer().getSprite().getPosition().x;
+		pos.y = this->map.getBarrier(i)->getPosition().y - 16;
+		this->et.setPlayerPos(L, pos);
+		//this->et.movePlayer(Vector2f(0, -dir.y), L, dt);
+	}
+	else if (dir.x < 0.0) //Left
+	{
+		canMoveLeft = false;
+		pos.y = this->et.getPlayer().getSprite().getPosition().y;
+		pos.x = this->map.getBarrier(i)->getPosition().x + 16 - 3;
+		this->et.setPlayerPos(L, pos);
+		//this->et.movePlayer(Vector2f(-dir.x, 0), L, dt);
+	}
+	else if (dir.x > 0.0) //Right
+	{
+		canMoveRight = false;
+		pos.y = this->et.getPlayer().getSprite().getPosition().y;
+		pos.x = this->map.getBarrier(i)->getPosition().x - 13;
+		this->et.setPlayerPos(L, pos);
+		//this->et.movePlayer(Vector2f(-dir.x, 0), L, dt);
+	}
 }
