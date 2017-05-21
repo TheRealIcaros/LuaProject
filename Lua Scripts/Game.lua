@@ -80,10 +80,6 @@ function getCanMove()
 	return entityHandler:getCanMove()
 end
 
-function increaseKills()
-	entityHandler:increaseKills()
-end
-
 function getKills()
 	return entityHandler:getKills()
 end

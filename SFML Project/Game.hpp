@@ -28,8 +28,6 @@ private:
 	Font font;
 	Text playerKills;
 
-	int kills = 0;
-
 	//vector<Sprite*> walls;
 
 
@@ -72,6 +70,6 @@ public:
 	void resizeWindow(RenderWindow &window, int size);
 	void clearWalls();
 	void drawText(RenderWindow &window);
-	void UppdateKills();
+	void updateKills(lua_State* L);
 };
 #endif // !

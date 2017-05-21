@@ -171,7 +171,7 @@ void Game::draw(RenderTarget &target, RenderStates states)const
 
 void Game::updateStartState(float dt)
 {
-	UppdateKills();
+	updateKills(this->L);
 	//Check Player Collision
 	this->playerTileCollision(dt, L);
 
@@ -492,11 +492,19 @@ void Game::drawText(RenderWindow &window)
 	}
 }
 
-void Game::UppdateKills()
+void Game::updateKills(lua_State* L)
 {
-	kills = this->et.getKills();
+	/*kills = this->et.getKills();*/
 
-	stringstream temp;
-	temp << "kills: " << kills;
-	this->playerKills.setString(temp.str());
+	lua_getglobal(L, "getKills");
+	lua_pcall(L, 0, 1, 0);
+	if (lua_isinteger(L, -1))
+	{
+		int tempKills = lua_tointeger(L, -1);
+		lua_pop(L, 1);
+
+		stringstream temp;
+		temp << "kills: " << tempKills;
+		this->playerKills.setString(temp.str());
+	}
 }

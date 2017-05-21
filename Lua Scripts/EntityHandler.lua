@@ -61,6 +61,8 @@ function EntityHandler:killEnemy(i)
 	self.enemyContainer[i + 1], self.enemyContainer[self.nrOfEnemys] = self.enemyContainer[self.nrOfEnemys], self.enemyContainer[i + 1]
 	self.enemyContainer[self.nrOfEnemys] = nil
 	self.nrOfEnemys = self.nrOfEnemys - 1
+
+	self.player1:increaseKills()
 end
 
 function EntityHandler:getPlayerDir()
@@ -81,10 +83,6 @@ end
 
 function EntityHandler:getCanMove()
 	return self.player1:getCanMove()
-end
-
-function EntityHandler:increaseKills()
-	self.player1:increaseKills()
 end
 
 function EntityHandler:getKills()
