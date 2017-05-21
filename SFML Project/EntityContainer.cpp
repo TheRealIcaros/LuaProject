@@ -129,6 +129,10 @@ void EntityContainer::restart(lua_State* L)
 	}
 	this->enemys.clear();
 
+	this->player.restart();
+
+	this->wave = 1;
+
 	lua_getglobal(L, "restart");
 	lua_pcall(L, 0, 0, 0);
 }
@@ -173,4 +177,19 @@ bool EntityContainer::isPlayerDead()const
 void EntityContainer::setPlayerDead(bool set)
 {
 	this->player.setPlayerDead(set);
+}
+
+vector<Enemy*> EntityContainer::getEnemys()
+{
+	return this->enemys;
+}
+
+int EntityContainer::getWave()
+{
+	return this->wave;
+}
+
+void EntityContainer::increaseWave()
+{
+	this->wave++;
 }

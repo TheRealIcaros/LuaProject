@@ -232,3 +232,11 @@ void Player::setPlayerDead(bool set)
 {
 	this->playerKilled = set;
 }
+
+void Player::restart()
+{
+	this->hp = 3;
+	this->kills = 0;
+
+	this->heart.setTextureRect(IntRect(0, 0, 32 * this->hp, 32));
+}

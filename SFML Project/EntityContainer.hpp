@@ -15,7 +15,10 @@ private:
 
 	Texture texturePlayer;
 
+	int wave = 0;
 	int kills;
+
+
 
 public:
 	EntityContainer();
@@ -41,6 +44,9 @@ public:
 	void setHeartPos(Vector2f pos);
 	bool isPlayerDead()const;
 	void setPlayerDead(bool set);
+	vector<Enemy*> getEnemys();
+	int getWave();
+	void increaseWave();
 };
 
 #endif // !

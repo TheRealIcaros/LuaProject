@@ -25,6 +25,14 @@ private:
 
 	Font font;
 	Text playerKills;
+	Text wave;
+
+	Clock enemySpawnTime;
+	float timeDelay = 5.0f;
+
+	int nrOfEnemyInWave = 2;
+
+	bool waveStarted = false;
 
 	//vector<Sprite*> walls;
 
@@ -69,6 +77,7 @@ public:
 	void clearWalls();
 	void drawText(RenderWindow &window);
 	void updateKills(lua_State* L);
+	void updateWave();
 	void displayDeadScreen(RenderWindow& window);
 };
 #endif // !

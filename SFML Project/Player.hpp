@@ -50,6 +50,7 @@ public:
 	void updateHeartSprite(lua_State* L);
 	bool isPlayerKilled()const;
 	void setPlayerDead(bool set);
+	void restart();
 };
 
 #endif // !

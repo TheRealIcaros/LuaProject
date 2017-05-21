@@ -55,6 +55,18 @@ Game::Game() : edit()
 	this->playerKills.setFillColor(sf::Color::Red);
 	this->playerKills.setPosition(0.0, 0.0);
 	this->playerKills.setStyle(sf::Text::Bold);
+
+	//Set the font to text wave
+	this->wave.setFont(font);
+
+	this->wave.setString("wave: 0");
+	this->wave.setCharacterSize(15);
+	this->wave.setFillColor(sf::Color::Red);
+	//this->wave.setPosition(((this->map.getMapSize() * 16) / 2) - 32, 0.0);
+	this->wave.setPosition(0.0, 0.0);
+	this->wave.setStyle(sf::Text::Bold);
+
+	srand(time(0));
 }
 
 Game::~Game()
@@ -96,8 +108,8 @@ void Game::update(RenderWindow &window)
 	}
 
 
-	if (Keyboard::isKeyPressed(Keyboard::R))
-		this->et.restart(this->L);
+	/*if (Keyboard::isKeyPressed(Keyboard::R))
+		this->et.restart(this->L);*/
 
 	if (!this->startStateOn && !this->editorStateOn)
 	{
@@ -118,6 +130,7 @@ void Game::update(RenderWindow &window)
 				this->enemySpawnPoints = this->map.findEnemySpawnPoints();
 				//set heart pos on screan
 				this->playerKills.setPosition(0.0, 0.0);
+				this->wave.setPosition(((this->map.getMapSize() * 16) / 2) - 32, 0.0);
 				this->et.setHeartPos(Vector2f((this->map.getMapSize() - 2) * 16, 0));
 			}
 			if (this->editor.getGlobalBounds().contains(window.mapPixelToCoords(Mouse::getPosition(window))))
@@ -196,8 +209,57 @@ void Game::updateStartState(float dt)
 	if (isPressed && !this->wasPressed)
 	{
 		Vector2i enemySpawn = randomEnemySpawnPoint();
-		this->wasPressed = true;
 		et.addEnemy(this->L, enemySpawn.x, enemySpawn.y);
+		this->wasPressed = true;
+	}
+
+	/*if (this->et.getEnemys().empty())
+	{
+		Vector2i enemySpawn = randomEnemySpawnPoint();
+		this->et.addEnemy(this->L, enemySpawn.x, enemySpawn.y);
+	}
+	else if (this->enemySpawnTime.getElapsedTime().asSeconds() >= this->timeDelay)
+	{
+		Vector2i enemySpawn = randomEnemySpawnPoint();
+		this->et.addEnemy(this->L, enemySpawn.x, enemySpawn.y);
+		this->enemySpawnTime.restart();
+		if (this->timeDelay > 0.5f)
+		{
+			this->timeDelay = this->timeDelay - 0.05f;
+		}
+	}*/
+	if (this->et.getEnemys().empty())
+	{
+		waveStarted = false;
+	}
+
+
+	if (!waveStarted)
+	{
+
+		if (this->et.getEnemys().size() < this->et.getWave() + 2)
+		{
+			if (enemySpawnTime.getElapsedTime().asSeconds() > 0.2f)
+			{
+				Vector2i enemySpawn = randomEnemySpawnPoint();
+				et.addEnemy(this->L, enemySpawn.x, enemySpawn.y);
+				this->enemySpawnTime.restart();
+			}
+		}
+
+		if (this->et.getEnemys().size() == this->et.getWave() + 2)
+		{
+			this->waveStarted = true;
+			this->et.increaseWave();
+			this->updateWave();
+		}
+		//for (int i = 0; i < this->et.getWave() * 2; i++)
+		//{
+		//	Vector2i enemySpawn = randomEnemySpawnPoint();
+		//	et.addEnemy(this->L, enemySpawn.x, enemySpawn.y);
+		//}
+
+
 	}
 
 	//Update Sprites
@@ -279,9 +341,13 @@ Vector2i Game::randomEnemySpawnPoint()
 	//
 	//return this->enemySpawnPoints.at(number);*/
 
-	random_device rd;
+	//random_device rd;
+	/*default_random_engine gen;
 	uniform_int_distribution<int> uniDistribution(0, this->enemySpawnPoints.size() -1);
-	int number = uniDistribution(rd);
+	int number = uniDistribution(gen);*/
+
+	int number = (rand() * this->enemySpawnTime.getElapsedTime().asMicroseconds()) % (this->enemySpawnPoints.size() - 1);
+
 	return this->enemySpawnPoints.at(number);
 }
 
@@ -495,6 +561,7 @@ void Game::drawText(RenderWindow &window)
 	if (startStateOn)
 	{
 		window.draw(playerKills);
+		window.draw(wave);
 	}
 	else if (this->et.isPlayerDead())
 	{
@@ -530,6 +597,15 @@ void Game::updateKills(lua_State* L)
 		temp << "kills: " << tempKills;
 		this->playerKills.setString(temp.str());
 	}
+}
+
+void Game::updateWave()
+{
+
+	stringstream temp;
+	temp << "Wave: " << this->et.getWave();
+	this->wave.setString(temp.str());
+
 }
 
 void Game::displayDeadScreen(RenderWindow& window)
