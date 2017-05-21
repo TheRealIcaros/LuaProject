@@ -134,8 +134,6 @@ function Player:calculateMovementLength(dt)
 		movementLength = self.dir * self.speed * dt
 	end
 
-	print(movementLength)
-
 	return movementLength
 end
 
