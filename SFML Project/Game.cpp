@@ -14,12 +14,6 @@ Game::Game() : edit()
 	this->exit.setTexture(this->exitTexture);
 	this->exit.setPosition(Vector2f(60.0f, 228.0f));
 
-	this->heartTexture.loadFromFile("../Images/HeartSpriteSheet.png");
-	this->heart.setTexture(this->heartTexture);
-	this->heart.setTextureRect(sf::IntRect(0, 0, 96, 32));
-	this->heart.setPosition(Vector2f((16 - 6) * 16, 0));
-
-
 
 	this->L = luaL_newstate();
 	luaL_openlibs(this->L);
@@ -79,8 +73,13 @@ void Game::update(RenderWindow &window)
 {
 	float nowDt = this->dt.getElapsedTime().asSeconds();
 
-	if (Keyboard::isKeyPressed(Keyboard::F1) && (this->startStateOn || this->editorStateOn))
+	if ((Keyboard::isKeyPressed(Keyboard::F1) && (this->startStateOn || this->editorStateOn)) || this->et.isPlayerDead())
 	{
+		if (this->et.isPlayerDead())
+		{
+			displayDeadScreen(window);
+		}
+
 		cout << "Returning to Main Menu" << endl;
 
 		this->resizeWindow(window, 16);
@@ -118,7 +117,8 @@ void Game::update(RenderWindow &window)
 				this->et.setPlayerSpawnPos(this->L, this->playerSpawn);
 				this->enemySpawnPoints = this->map.findEnemySpawnPoints();
 				//set heart pos on screan
-				this->heart.setPosition(Vector2f((this->map.getMapSize() - 2) * 16, 0));
+				this->playerKills.setPosition(0.0, 0.0);
+				this->et.setHeartPos(Vector2f((this->map.getMapSize() - 2) * 16, 0));
 			}
 			if (this->editor.getGlobalBounds().contains(window.mapPixelToCoords(Mouse::getPosition(window))))
 			{
@@ -149,23 +149,29 @@ void Game::update(RenderWindow &window)
 
 void Game::draw(RenderTarget &target, RenderStates states)const
 {
-	if (!this->startStateOn && !this->editorStateOn)
+	if (!this->et.isPlayerDead())
 	{
-		target.draw(this->start, states);
-		target.draw(this->editor, states);
-		target.draw(this->exit, states);
-	}
+		if (!this->startStateOn && !this->editorStateOn)
+		{
+			target.draw(this->start, states);
+			target.draw(this->editor, states);
+			target.draw(this->exit, states);
+		}
 
-	if (this->startStateOn)
-	{
-		target.draw(this->map, states);
-		target.draw(this->et, states);
-		target.draw(this->heart, states);
-	}
+		if (this->startStateOn)
+		{
+			target.draw(this->map, states);
+			target.draw(this->et, states);
+		}
 
-	if (this->editorStateOn)
+		if (this->editorStateOn)
+		{
+			target.draw(this->edit, states);
+		}
+	}
+	else
 	{
-		target.draw(this->edit, states);
+
 	}
 }
 
@@ -490,6 +496,23 @@ void Game::drawText(RenderWindow &window)
 	{
 		window.draw(playerKills);
 	}
+	else if (this->et.isPlayerDead())
+	{
+		lua_getglobal(this->L, "getKills");
+		lua_pcall(this->L, 0, 1, 0);
+		if (lua_isinteger(this->L, -1))
+		{
+			int tempKills = lua_tointeger(this->L, -1);
+			lua_pop(this->L, 1);
+
+			stringstream temp;
+			temp << "Game Over! \nYou got " << tempKills << " kills.";
+			this->playerKills.setString(temp.str());
+			this->playerKills.setPosition(window.getSize().x / 2 - temp.str().length(), (window.getSize().y / 2) - 16);
+		
+			window.draw(this->playerKills);
+		}
+	}
 }
 
 void Game::updateKills(lua_State* L)
@@ -507,4 +530,18 @@ void Game::updateKills(lua_State* L)
 		temp << "kills: " << tempKills;
 		this->playerKills.setString(temp.str());
 	}
+}
+
+void Game::displayDeadScreen(RenderWindow& window)
+{
+	this->startStateOn = false;
+	this->editorStateOn = false;
+
+	window.clear();
+	this->drawText(window);
+	window.display();
+
+	system("Pause");
+
+	this->et.setPlayerDead(false);
 }

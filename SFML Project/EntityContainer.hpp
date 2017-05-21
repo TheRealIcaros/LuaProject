@@ -27,7 +27,7 @@ public:
 	void draw(RenderTarget &target, RenderStates states)const;
 
 	void addEnemy(lua_State* L, float x = 200, float y = 200);
-	void enemyAttackPlayerColition(int i);
+	void enemyAttackPlayerColition(int i, lua_State* L);
 	void playerAttackEnemyColition(lua_State* L, int i);
 	void wallColition();
 	void restart(lua_State* L);
@@ -38,6 +38,9 @@ public:
 
 	void movePlayer(Vector2f move, lua_State* L, float dt);
 	int getKills()const;
+	void setHeartPos(Vector2f pos);
+	bool isPlayerDead()const;
+	void setPlayerDead(bool set);
 };
 
 #endif // !

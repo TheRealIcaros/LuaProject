@@ -20,6 +20,12 @@ Player::Player()
 	this->hitbox.setSize(Vector2f(10.0, 14.0));
 	this->hitbox.setFillColor(sf::Color(0, 100, 100, 230));
 	this->hitbox.setOrigin(-3.0, -2.0);
+
+	this->heartTexture.loadFromFile("../Images/HeartSpriteSheet.png");
+	this->heart.setTexture(this->heartTexture);
+	this->heart.setTextureRect(sf::IntRect(0, 0, 96, 32));
+	this->heart.setPosition(Vector2f((16 - 6) * 16, 0));
+
 }
 
 Player::~Player()
@@ -48,6 +54,7 @@ void Player::draw(RenderTarget &target, RenderStates states)const
 {
 	target.draw(this->spritePlayer, states);
 	target.draw(this->hitbox, states);
+	target.draw(this->heart, states);
 }
 
 void Player::setSpritePosition(lua_State* L)
@@ -191,4 +198,37 @@ void Player::movePlayer(Vector2f move, lua_State* L, float dt)
 	lua_pushnumber(L, move.y);
 	lua_pushnumber(L, dt);
 	lua_pcall(L, 3, 0, 0);
+}
+
+void Player::setHeartPos(Vector2f pos)
+{
+	this->heart.setPosition(pos);
+}
+
+void Player::updateHeartSprite(lua_State* L)
+{
+	lua_getglobal(L, "getHp");
+	lua_pcall(L, 0, 1, 0);
+	if (lua_isinteger(L, -1))
+	{
+		this->hp = lua_tointeger(L, -1);
+		lua_pop(L, 1);
+
+		this->heart.setTextureRect(IntRect(0, 0, 32 * this->hp, 32));
+	}
+
+	if (this->hp <= 0)
+	{
+		this->playerKilled = true;
+	}
+}
+
+bool Player::isPlayerKilled()const
+{
+	return this->playerKilled;
+}
+
+void Player::setPlayerDead(bool set)
+{
+	this->playerKilled = set;
 }

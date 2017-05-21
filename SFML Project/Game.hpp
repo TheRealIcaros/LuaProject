@@ -16,8 +16,6 @@ private:
 	Sprite editor;
 	Sprite exit;
 
-	Texture heartTexture;
-	Sprite heart;
 
 	lua_State* L;
 	EntityContainer et;
@@ -71,5 +69,6 @@ public:
 	void clearWalls();
 	void drawText(RenderWindow &window);
 	void updateKills(lua_State* L);
+	void displayDeadScreen(RenderWindow& window);
 };
 #endif // !

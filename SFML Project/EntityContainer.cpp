@@ -44,7 +44,7 @@ void EntityContainer::update(lua_State* L, float dt)
 	{
 		this->enemys[i]->update(L, dt, i + 1);
 
-		enemyAttackPlayerColition(i);
+		enemyAttackPlayerColition(i, L);
 
 		if (this->player.getIsSwinging())
 		{
@@ -76,15 +76,20 @@ void EntityContainer::addEnemy(lua_State* L, float x, float y)
 	this->enemys.push_back(new Enemy(L, x, y));
 }
 
-void EntityContainer::enemyAttackPlayerColition(int i)
+void EntityContainer::enemyAttackPlayerColition(int i, lua_State* L)
 {
 	if (this->player.getHitbox().getGlobalBounds().intersects(this->enemys[i]->getSprite().getGlobalBounds()))
 	{
 		if (hpClock.getElapsedTime().asSeconds() > 1.0f)
 		{
 			hpClock.restart();
-			this->player.damageHp();
-			cout << this->player.getHp() << endl;
+			/*this->player.damageHp();
+			cout << this->player.getHp() << endl;*/
+
+			lua_getglobal(L, "decreaseHp");
+			lua_pcall(L, 0, 0, 0);
+
+			this->player.updateHeartSprite(L);
 		}
 	}
 }
@@ -153,4 +158,19 @@ void EntityContainer::movePlayer(Vector2f move, lua_State* L, float dt)
 int EntityContainer::getKills()const
 {
 	return this->kills;
+}
+
+void EntityContainer::setHeartPos(Vector2f pos)
+{
+	this->player.setHeartPos(pos);
+}
+
+bool EntityContainer::isPlayerDead()const
+{
+	return this->player.isPlayerKilled();
+}
+
+void EntityContainer::setPlayerDead(bool set)
+{
+	this->player.setPlayerDead(set);
 }

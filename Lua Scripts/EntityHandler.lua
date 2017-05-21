@@ -2,7 +2,7 @@ dofile("../Lua Scripts/Vector.lua")
 dofile("../Lua Scripts/Player.lua")
 dofile("../Lua Scripts/Enemy.lua")
 
-EntityHandler = {player1 = Player:New(),
+EntityHandler = {player = Player:New(),
 	enemyContainer = {},
 	nrOfEnemys = 0}
 
@@ -14,25 +14,25 @@ function EntityHandler:New(e)
 end
 
 function EntityHandler:Start()
-	self.player1 = Player:New()
+	self.player = Player:New()
 	self.enemyContainer = {}
 	self.nrOfEnemys = 0
 end
 
 function EntityHandler:Update(dt)
-	self.player1:Update(dt)
+	self.player:Update(dt)
 
 	for key, value in pairs(self.enemyContainer) do
-		self.enemyContainer[key]:Update(self.player1.pos, dt)
+		self.enemyContainer[key]:Update(self.player.pos, dt)
 	end
 end
 
 function EntityHandler:setPlayerPos(x, y)
-	self.player1:setPlayerPos(x, y);
+	self.player:setPlayerPos(x, y);
 end
 
 function EntityHandler:getPlayerPos()
-	return self.player1:getPlayerPos()
+	return self.player:getPlayerPos()
 end
 
 function EntityHandler:getEnemyPos(key)
@@ -40,7 +40,7 @@ function EntityHandler:getEnemyPos(key)
 end
 
 function EntityHandler:getPlayerLookDirection()
-	return self.player1:getPlayerLookDirection()
+	return self.player:getPlayerLookDirection()
 end
 
 function EntityHandler:addEnemy(x, y)
@@ -54,7 +54,7 @@ function EntityHandler:restart()
 end
 
 function EntityHandler:getPlayerIsAttacking()
-	return self.player1:getPlayerIsAttacking()
+	return self.player:getPlayerIsAttacking()
 end
 
 function EntityHandler:killEnemy(i)
@@ -62,29 +62,37 @@ function EntityHandler:killEnemy(i)
 	self.enemyContainer[self.nrOfEnemys] = nil
 	self.nrOfEnemys = self.nrOfEnemys - 1
 
-	self.player1:increaseKills()
+	self.player:increaseKills()
 end
 
 function EntityHandler:getPlayerDir()
-	return self.player1:getPlayerDir()
+	return self.player:getPlayerDir()
 end
 
 function EntityHandler:setPlayerDir(x, y)
-	self.player1:setPlayerDir(x, y)
+	self.player:setPlayerDir(x, y)
 end
 
 function EntityHandler:setCanMove(Up, Down, Left, Right)
-	self.player1:setCanMove(Up, Down, Left, Right)
+	self.player:setCanMove(Up, Down, Left, Right)
 end
 
 function EntityHandler:movePlayerFromC(x, y, dt)
-	self.player1:movePlayerFromC(x, y, dt)
+	self.player:movePlayerFromC(x, y, dt)
 end
 
 function EntityHandler:getCanMove()
-	return self.player1:getCanMove()
+	return self.player:getCanMove()
 end
 
 function EntityHandler:getKills()
-	return self.player1:getKills()
+	return self.player:getKills()
+end
+
+function EntityHandler:decreaseHp()
+	self.player:decreaseHp()
+end
+
+function EntityHandler:getHp()
+	return self.player:getHp()
 end

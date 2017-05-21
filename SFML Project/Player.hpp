@@ -14,7 +14,12 @@ private:
 
 	RectangleShape hitbox;
 
-	int hp;
+	Texture heartTexture;
+	Sprite heart;
+
+	int hp = 3;
+	int kills = 0;
+	bool playerKilled = false;
 
 	int animationSwing;
 	bool isAttacking;
@@ -41,6 +46,10 @@ public:
 	void setPlayerPos(lua_State* L, Vector2f pos);
 
 	void movePlayer(Vector2f move, lua_State* L, float dt);
+	void setHeartPos(Vector2f pos);
+	void updateHeartSprite(lua_State* L);
+	bool isPlayerKilled()const;
+	void setPlayerDead(bool set);
 };
 
 #endif // !

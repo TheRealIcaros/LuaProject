@@ -21,7 +21,7 @@ function setPlayerPos(x, y)
 end
 
 function getPlayerPos()
-	return entityHandler.player1:getPlayerPos()
+	return entityHandler.player:getPlayerPos()
 end
 
 function getEnemyPos(key)
@@ -29,7 +29,7 @@ function getEnemyPos(key)
 end
 
 function getPlayerLookDirection()
-	return entityHandler.player1:getPlayerLookDirection()
+	return entityHandler.player:getPlayerLookDirection()
 end
 
 function addEnemy(x, y)
@@ -82,4 +82,12 @@ end
 
 function getKills()
 	return entityHandler:getKills()
+end
+
+function decreaseHp()
+	entityHandler:decreaseHp()
+end
+
+function getHp()
+	return entityHandler:getHp()
 end

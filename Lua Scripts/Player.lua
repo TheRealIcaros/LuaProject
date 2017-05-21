@@ -9,7 +9,8 @@ Player = {pos = Vector:New({x = 200, y = 200}),
 			canMoveDown = true,
 			canMoveLeft = true,
 			canMoveRight = true,
-			kills = 0}
+			kills = 0,
+			hp = 3}
 
 function Player:New(p)
 	p = p or {}
@@ -150,4 +151,14 @@ end
 
 function Player:getKills()
 	return self.kills
+end
+
+function Player:decreaseHp()
+	if(self.hp > 0)then
+		self.hp = self.hp - 1
+	end
+end
+
+function Player:getHp()
+	return self.hp
 end
