@@ -131,7 +131,7 @@ void EntityContainer::restart(lua_State* L)
 
 	this->player.restart();
 
-	this->wave = 1;
+	this->wave = 0;
 
 	lua_getglobal(L, "restart");
 	lua_pcall(L, 0, 0, 0);

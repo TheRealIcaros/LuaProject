@@ -103,6 +103,7 @@ void Game::update(RenderWindow &window)
 		//this->clearWalls();
 		this->map.resetTables(this->L);
 		this->map.resetMapFound();
+		this->map.clearBarrier();
 
 		this->et.restart(this->L);
 	}
@@ -132,6 +133,7 @@ void Game::update(RenderWindow &window)
 				this->playerKills.setPosition(0.0, 0.0);
 				this->wave.setPosition(((this->map.getMapSize() * 16) / 2) - 32, 0.0);
 				this->et.setHeartPos(Vector2f((this->map.getMapSize() - 2) * 16, 0));
+				this->map.addBarrier();
 			}
 			if (this->editor.getGlobalBounds().contains(window.mapPixelToCoords(Mouse::getPosition(window))))
 			{
@@ -239,7 +241,7 @@ void Game::updateStartState(float dt)
 
 		if (this->et.getEnemys().size() < this->et.getWave() + 2)
 		{
-			if (enemySpawnTime.getElapsedTime().asSeconds() > 0.2f)
+			if (enemySpawnTime.getElapsedTime().asSeconds() > timeDelay)
 			{
 				Vector2i enemySpawn = randomEnemySpawnPoint();
 				et.addEnemy(this->L, enemySpawn.x, enemySpawn.y);
@@ -341,14 +343,16 @@ Vector2i Game::randomEnemySpawnPoint()
 	//
 	//return this->enemySpawnPoints.at(number);*/
 
-	//random_device rd;
-	/*default_random_engine gen;
+	/*random_device rd;
+	default_random_engine gen;
 	uniform_int_distribution<int> uniDistribution(0, this->enemySpawnPoints.size() -1);
 	int number = uniDistribution(gen);*/
 
-	int number = (rand() * this->enemySpawnTime.getElapsedTime().asMicroseconds()) % (this->enemySpawnPoints.size() - 1);
+	int number = (rand() * this->enemySpawnTime.getElapsedTime().asMicroseconds()) % this->enemySpawnPoints.size();
 
-	return this->enemySpawnPoints.at(number);
+	return this->enemySpawnPoints[number];
+
+	//return this->enemySpawnPoints[number];
 }
 
 void Game::playerTileCollision(float dt, lua_State* L)
@@ -521,9 +525,10 @@ void Game::drawText(RenderWindow &window)
 			lua_pop(this->L, 1);
 
 			stringstream temp;
-			temp << "Game Over! \nYou got " << tempKills << " kills.";
+			temp << "Game Over! \nYou got " << tempKills << " kills. \nYou reached Wave: " << this->et.getWave();
 			this->playerKills.setString(temp.str());
 			this->playerKills.setPosition(window.getSize().x / 2 - temp.str().length(), (window.getSize().y / 2) - 16);
+
 		
 			window.draw(this->playerKills);
 		}

@@ -28,9 +28,7 @@ private:
 	Text wave;
 
 	Clock enemySpawnTime;
-	float timeDelay = 5.0f;
-
-	int nrOfEnemyInWave = 2;
+	float timeDelay = 0.2f;
 
 	bool waveStarted = false;
 
