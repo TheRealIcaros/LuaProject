@@ -14,7 +14,7 @@ Game::Game() : edit()
 	this->exit.setTexture(this->exitTexture);
 	this->exit.setPosition(Vector2f(60.0f, 228.0f));
 
-	this->heartTexture.loadFromFile("../Images/HeartSpriteSheettest2.png");
+	this->heartTexture.loadFromFile("../Images/HeartSpriteSheet.png");
 	this->heart.setTexture(this->heartTexture);
 	this->heart.setTextureRect(sf::IntRect(0, 0, 96, 32));
 	this->heart.setPosition(Vector2f((16 - 6) * 16, 0));
