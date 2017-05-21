@@ -32,7 +32,7 @@ Player::~Player()
 {
 }
 
-void Player::update(lua_State* L, float dt)	//(float dt, lua_State* L)
+void Player::update(lua_State* L, float dt)
 {
 
 	this->checkAttacking(L, dt);
@@ -186,8 +186,6 @@ RectangleShape Player::getHitbox()const
 
 void Player::setPlayerPos(lua_State* L, Vector2f pos)
 {
-	//this->spritePlayer.setPosition(pos);
-
 	this->setPlayerPosInLua(L, pos);
 }
 

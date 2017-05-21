@@ -9,7 +9,6 @@ class EntityContainer : public Drawable
 {
 private:
 	Player player;
-	//Enemy* *enemys2;
 	vector<Enemy*> enemys;
 	Clock hpClock;
 
@@ -26,7 +25,7 @@ public:
 	~EntityContainer();
 	EntityContainer(const EntityContainer &originalObject);
 	void operator=(const EntityContainer &originalObject);
-	void update(lua_State* L, float dt);	//(float dt, lua_State* L);
+	void update(lua_State* L, float dt);	
 	void draw(RenderTarget &target, RenderStates states)const;
 
 	void addEnemy(lua_State* L, float x = 200, float y = 200);

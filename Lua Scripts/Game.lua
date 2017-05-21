@@ -3,7 +3,6 @@ dofile("../Lua Scripts/Map.lua")
 
 function Start()
 	startStateOn = true
-	--editorStateOn = false
 
 	entityHandler = EntityHandler:New()
 

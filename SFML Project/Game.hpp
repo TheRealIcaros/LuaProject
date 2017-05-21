@@ -32,10 +32,6 @@ private:
 
 	bool waveStarted = false;
 
-	//vector<Sprite*> walls;
-
-
-	//int lookDirection;
 	bool wasPressed;
 	int selectedBlock;
 
@@ -69,10 +65,7 @@ public:
 
 	void playerTileCollision(float dt, lua_State* L);
 	Vector2i getPlayArea();
-	bool place_freeX(float dt, RectangleShape rect1, Sprite* rect2, lua_State* L, Vector2f dir);
-	bool place_freeY(float dt, RectangleShape rect1, Sprite* rect2, lua_State* L, Vector2f dir);
 	void resizeWindow(RenderWindow &window, int size);
-	void clearWalls();
 	void drawText(RenderWindow &window);
 	void updateKills(lua_State* L);
 	void updateWave();

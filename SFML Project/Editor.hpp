@@ -36,7 +36,6 @@ private:
 
 	lua_State* E;
 
-	//vector<Enemy*>
 	vector<vector <Sprite*>> map;
 
 	int sizeXY;

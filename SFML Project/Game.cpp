@@ -62,7 +62,6 @@ Game::Game() : edit()
 	this->wave.setString("wave: 0");
 	this->wave.setCharacterSize(15);
 	this->wave.setFillColor(sf::Color::Red);
-	//this->wave.setPosition(((this->map.getMapSize() * 16) / 2) - 32, 0.0);
 	this->wave.setPosition(0.0, 0.0);
 	this->wave.setStyle(sf::Text::Bold);
 
@@ -71,11 +70,6 @@ Game::Game() : edit()
 
 Game::~Game()
 {
-	/*for (int x = 0; x < this->enemySpawnPoints.size(); x++)
-	{
-		delete this->enemySpawnPoints[x];
-	}*/
-
 	this->enemySpawnPoints.clear();
 
 	lua_close(this->L);
@@ -100,17 +94,12 @@ void Game::update(RenderWindow &window)
 		this->editorStateOn = false;
 
 		this->map.clearVector();
-		//this->clearWalls();
 		this->map.resetTables(this->L);
 		this->map.resetMapFound();
 		this->map.clearBarrier();
 
 		this->et.restart(this->L);
 	}
-
-
-	/*if (Keyboard::isKeyPressed(Keyboard::R))
-		this->et.restart(this->L);*/
 
 	if (!this->startStateOn && !this->editorStateOn)
 	{
@@ -124,8 +113,6 @@ void Game::update(RenderWindow &window)
 				this->playerSpawn = map.loadFromFile(L, window);
 
 				this->resizeWindow(window, map.getMapSize());
-
-				//this->walls = this->map.getWalls();
 
 				this->et.setPlayerSpawnPos(this->L, this->playerSpawn);
 				this->enemySpawnPoints = this->map.findEnemySpawnPoints();
@@ -215,30 +202,13 @@ void Game::updateStartState(float dt)
 		this->wasPressed = true;
 	}
 
-	/*if (this->et.getEnemys().empty())
-	{
-		Vector2i enemySpawn = randomEnemySpawnPoint();
-		this->et.addEnemy(this->L, enemySpawn.x, enemySpawn.y);
-	}
-	else if (this->enemySpawnTime.getElapsedTime().asSeconds() >= this->timeDelay)
-	{
-		Vector2i enemySpawn = randomEnemySpawnPoint();
-		this->et.addEnemy(this->L, enemySpawn.x, enemySpawn.y);
-		this->enemySpawnTime.restart();
-		if (this->timeDelay > 0.5f)
-		{
-			this->timeDelay = this->timeDelay - 0.05f;
-		}
-	}*/
 	if (this->et.getEnemys().empty())
 	{
 		waveStarted = false;
 	}
 
-
 	if (!waveStarted)
 	{
-
 		if (this->et.getEnemys().size() < this->et.getWave() + 2)
 		{
 			if (enemySpawnTime.getElapsedTime().asSeconds() > timeDelay)
@@ -255,21 +225,11 @@ void Game::updateStartState(float dt)
 			this->et.increaseWave();
 			this->updateWave();
 		}
-		//for (int i = 0; i < this->et.getWave() * 2; i++)
-		//{
-		//	Vector2i enemySpawn = randomEnemySpawnPoint();
-		//	et.addEnemy(this->L, enemySpawn.x, enemySpawn.y);
-		//}
-
-
 	}
 
 	//Update Sprites
 	this->et.update(this->L, dt);
 
-
-
-	//this->dt.restart();
 	this->wasPressed = isPressed;
 }
 
@@ -331,28 +291,9 @@ int Game::CheckMovement(lua_State* L)
 
 Vector2i Game::randomEnemySpawnPoint()
 {
-	/*default_random_engine generator;
-	uniform_int_distribution<int> distribution(0, this->enemySpawnPoints.size());
-
-	int number = distribution(generator);*/
-
-	/*srand(time(NULL));
-	//int number = rand() % this->enemySpawnPoints.size();
-	//
-	//cout << number << endl;
-	//
-	//return this->enemySpawnPoints.at(number);*/
-
-	/*random_device rd;
-	default_random_engine gen;
-	uniform_int_distribution<int> uniDistribution(0, this->enemySpawnPoints.size() -1);
-	int number = uniDistribution(gen);*/
-
 	int number = (rand() * this->enemySpawnTime.getElapsedTime().asMicroseconds()) % this->enemySpawnPoints.size();
 
 	return this->enemySpawnPoints[number];
-
-	//return this->enemySpawnPoints[number];
 }
 
 void Game::playerTileCollision(float dt, lua_State* L)
@@ -424,11 +365,6 @@ void Game::playerTileCollision(float dt, lua_State* L)
 	canMoveDown = lua_toboolean(L, -3);
 	canMoveLeft = lua_toboolean(L, -2);
 	canMoveRight = lua_toboolean(L, -1);
-
-	/*canMoveUp = true;
-	canMoveDown = true;
-	canMoveLeft = true;
-	canMoveRight = true;*/
 }
 
 Vector2i Game::getPlayArea()
@@ -439,47 +375,12 @@ Vector2i Game::getPlayArea()
 	Vector2i startPos = Vector2i(32, 32);
 	result.y = ((x - startPos.x) / 16) % this->map.getMapSize();
 	result.x = ((y - startPos.y) / 16) % this->map.getMapSize();
-	//cout << result.x << ", " << result.y << endl;
-	return result;
-}
-
-bool Game::place_freeX(float dt, RectangleShape rect1, Sprite* rect2, lua_State* L, Vector2f dir)
-{
-	bool result = true;
-	
-	rect1.move(dt * 150 * dir.x, 0);
-	//rect1.setPosition(rect1.getPosition().x + (dt * 75 * dir.x), rect1.getPosition().y);
-
-	if (rect1.getGlobalBounds().intersects(rect2->getGlobalBounds()))
-	{
-		result = false;
-	}
-
-	return result;
-}
-
-bool Game::place_freeY(float dt, RectangleShape rect1, Sprite* rect2, lua_State* L, Vector2f dir)
-{
-	bool result = true;
-
-	rect1.move(0, dt * 150 * dir.y);
-	//rect1.setPosition(rect1.getPosition().x, rect1.getPosition().y + (dt * 75 * dir.y));
-
-	if (rect1.getGlobalBounds().intersects(rect2->getGlobalBounds()))
-	{
-		result = false;
-	}
-
 	return result;
 }
 
 void Game::resizeWindow(RenderWindow &window, int size)
 {
-	sf::View view;//sf::FloatRect(0, 0, 1000, 600));
-
-	// activate it
-	//window.setView(view);
-
+	sf::View view;
 
 	switch (size)
 	{
@@ -497,15 +398,6 @@ void Game::resizeWindow(RenderWindow &window, int size)
 		break;
 	}
 	window.setView(view);
-}
-
-void Game::clearWalls()
-{
-	/*for (int x = 0; x < this->walls.size(); x++)
-	{
-		this->walls.pop_back();
-	}
-	this->walls.clear();*/
 }
 
 void Game::drawText(RenderWindow &window)
@@ -537,8 +429,6 @@ void Game::drawText(RenderWindow &window)
 
 void Game::updateKills(lua_State* L)
 {
-	/*kills = this->et.getKills();*/
-
 	lua_getglobal(L, "getKills");
 	lua_pcall(L, 0, 1, 0);
 	if (lua_isinteger(L, -1))
@@ -584,7 +474,6 @@ void Game::collisionTile(Vector2f dir, Vector2i tile)
 		pos.x = this->et.getPlayer().getSprite().getPosition().x;
 		pos.y = this->map.tileBottom(tile.x, tile.y) - 2;
 		this->et.setPlayerPos(L, pos);
-		//this->et.movePlayer(Vector2f(0, -dir.y), L, dt);
 	}
 	else if (dir.y > 0.0) //Down
 	{
@@ -592,7 +481,6 @@ void Game::collisionTile(Vector2f dir, Vector2i tile)
 		pos.x = this->et.getPlayer().getSprite().getPosition().x;
 		pos.y = this->map.tileTop(tile.x, tile.y) - 16;
 		this->et.setPlayerPos(L, pos);
-		//this->et.movePlayer(Vector2f(0, -dir.y), L, dt);
 	}
 	else if (dir.x < 0.0) //Left
 	{
@@ -600,7 +488,6 @@ void Game::collisionTile(Vector2f dir, Vector2i tile)
 		pos.y = this->et.getPlayer().getSprite().getPosition().y;
 		pos.x = this->map.tileRight(tile.x, tile.y) - 3;
 		this->et.setPlayerPos(L, pos);
-		//this->et.movePlayer(Vector2f(-dir.x, 0), L, dt);
 	}
 	else if (dir.x > 0.0) //Right
 	{
@@ -608,7 +495,6 @@ void Game::collisionTile(Vector2f dir, Vector2i tile)
 		pos.y = this->et.getPlayer().getSprite().getPosition().y;
 		pos.x = this->map.tileLeft(tile.x, tile.y) - 13;
 		this->et.setPlayerPos(L, pos);
-		//this->et.movePlayer(Vector2f(-dir.x, 0), L, dt);
 	}
 }
 
@@ -621,7 +507,6 @@ void Game::collisionBarrier(Vector2f dir, int i)
 		pos.x = this->et.getPlayer().getSprite().getPosition().x;
 		pos.y = this->map.getBarrier(i)->getPosition().x + 16 - 2;
 		this->et.setPlayerPos(L, pos);
-		//this->et.movePlayer(Vector2f(0, -dir.y), L, dt);
 	}
 	else if (dir.y > 0.0) //Down
 	{
@@ -629,7 +514,6 @@ void Game::collisionBarrier(Vector2f dir, int i)
 		pos.x = this->et.getPlayer().getSprite().getPosition().x;
 		pos.y = this->map.getBarrier(i)->getPosition().y - 16;
 		this->et.setPlayerPos(L, pos);
-		//this->et.movePlayer(Vector2f(0, -dir.y), L, dt);
 	}
 	else if (dir.x < 0.0) //Left
 	{
@@ -637,7 +521,6 @@ void Game::collisionBarrier(Vector2f dir, int i)
 		pos.y = this->et.getPlayer().getSprite().getPosition().y;
 		pos.x = this->map.getBarrier(i)->getPosition().x + 16 - 3;
 		this->et.setPlayerPos(L, pos);
-		//this->et.movePlayer(Vector2f(-dir.x, 0), L, dt);
 	}
 	else if (dir.x > 0.0) //Right
 	{
@@ -645,6 +528,5 @@ void Game::collisionBarrier(Vector2f dir, int i)
 		pos.y = this->et.getPlayer().getSprite().getPosition().y;
 		pos.x = this->map.getBarrier(i)->getPosition().x - 13;
 		this->et.setPlayerPos(L, pos);
-		//this->et.movePlayer(Vector2f(-dir.x, 0), L, dt);
 	}
 }

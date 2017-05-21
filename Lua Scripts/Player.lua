@@ -21,9 +21,7 @@ end
 
 --Game Logic
 function Player:Start()
-	--playerPos = Vector:New({x = 0, y = 0})
-	--dir = Vector:New({x = 0, y = 0})
-	--movementSpeed = 75
+	
 end
 
 function Player:Update(dt)

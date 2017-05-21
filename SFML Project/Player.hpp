@@ -29,7 +29,7 @@ private:
 public:
 	Player();
 	~Player();
-	void update(lua_State* L, float dt);	//(float dt, lua_State* L);
+	void update(lua_State* L, float dt);	
 	void draw(RenderTarget &target, RenderStates states)const;
 
 	void setSpritePosition(lua_State* L);

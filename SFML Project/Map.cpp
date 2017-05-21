@@ -24,28 +24,12 @@ Map::Map()
 	{
 		cout << "Spawnpoint player image not found!" << endl;
 	}
-
-	//if (!this->font.loadFromFile("../Font/BebasNeue.otf"))
-	//	cout << "Can't find font" << endl;
-
-	////Set the font to text
-	//this->playerKills.setFont(font);
-
-	//this->playerKills.setString("Hello Will I Am!");
-	//this->playerKills.setCharacterSize(50);
-	//this->playerKills.setFillColor(sf::Color::Red);
-	//this->playerKills.setPosition(0.0, 0.0);
-	//this->playerKills.setStyle(sf::Text::Bold | sf::Text::Underlined);
-
-
-
 	this->reloadVectors();
 }
 
 Map::~Map()
 {
 	this->clearVector();
-	//this->clearWalls();
 	this->clearBarrier();
 }
 
@@ -116,7 +100,6 @@ void Map::reloadSprites(lua_State* L)
 	this->addBarrier();
 
 	clearVector();
-	//this->clearWalls();
 	reloadVectors();
 
 	for (int y = 0; y < this->map.size(); y++)
@@ -143,7 +126,6 @@ void Map::reloadSprites(lua_State* L)
 				break;
 			case 1:
 				this->map[y][x]->setTexture(this->wallTexture);
-				//this->walls.push_back(this->map[y][x]);
 				break;
 			case 2:
 				this->map[y][x]->setTexture(this->waterTexture);
@@ -187,8 +169,6 @@ void Map::clearVector()
 		this->map[y].clear();
 	}
 	this->map.clear();
-	
-	//this->clearWalls();
 }
 
 bool Map::checkPlayerSpawnArea()
@@ -288,11 +268,6 @@ float Map::tileBottom(int x, int y)
 	return result;
 }
 
-//vector<Sprite*> Map::getWalls()
-//{
-	//return this->walls;
-//}
-
 void Map::resetTables(lua_State* L)
 {
 	lua_getglobal(L, "resetTables");
@@ -303,15 +278,6 @@ void Map::resetMapFound()
 {
 	this->mapFound = false;
 }
-
-//void Map::clearWalls()
-//{
-//	for (int x = 0; x < this->walls.size(); x++)
-//	{
-//		this->walls.pop_back();
-//	}
-//	this->walls.clear();
-//}
 
 bool Map::checkEnemySpawnArea()
 {
@@ -365,14 +331,6 @@ void Map::addBarrier()
 
 void Map::clearBarrier()
 {
-	//for (int x = this->barrier.size(); x > -1; x--)
-	//{
-
-	//	delete this->barrier[x];
-	//	barrier.pop_back();
-	//}
-	//this->barrier.clear();
-
 	for (int x = 0; x < this->barrier.size(); x++)
 	{
 		delete this->barrier[x];

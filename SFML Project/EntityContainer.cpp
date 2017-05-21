@@ -10,11 +10,6 @@ EntityContainer::EntityContainer(lua_State* L)
 	this->player = Player();
 
 	int kills = 0;
-	//this->enemys = vector<Enemy>();
-
-	//this->enemys = new Enemy*[this->cap];
-
-	//addEnemy(L);
 }
 
 EntityContainer::~EntityContainer()
@@ -71,8 +66,6 @@ void EntityContainer::addEnemy(lua_State* L, float x, float y)
 	lua_pushnumber(L, y);
 	lua_pcall(L, 2, 0, 0);
 
-	//this->enemys[this->nrof++] = new Enemy(L, x, y);
-
 	this->enemys.push_back(new Enemy(L, x, y));
 }
 
@@ -83,8 +76,6 @@ void EntityContainer::enemyAttackPlayerColition(int i, lua_State* L)
 		if (hpClock.getElapsedTime().asSeconds() > 1.0f)
 		{
 			hpClock.restart();
-			/*this->player.damageHp();
-			cout << this->player.getHp() << endl;*/
 
 			lua_getglobal(L, "decreaseHp");
 			lua_pcall(L, 0, 0, 0);
@@ -111,8 +102,6 @@ void EntityContainer::playerAttackEnemyColition(lua_State* L, int i)
 		lua_getglobal(L, "killEnemy");
 		lua_pushinteger(L, i);
 		lua_pcall(L, 1, 0, 0);
-
-		//this->kills++;
 	}
 }
 

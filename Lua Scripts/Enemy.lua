@@ -12,8 +12,7 @@ end
 
 --Game Logic
 function Enemy:Start()
-	--local dir = Vector:New({x = 0, y = 0})
-	--local movementLength = Vector:New({x = 0, y = 0})
+	
 end
 
 function Enemy:Update(playerPos, dt)
@@ -30,9 +29,7 @@ function Enemy:updateMovement(playerPos, dt)
 	
 	local movementLength = Vector:New({x = 0, y = 0})
 	movementLength = dir * self.speed * dt
-
-	--print(self.pos)
-
+	
 	self.pos = self.pos + movementLength
 end
 
