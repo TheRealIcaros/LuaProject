@@ -54,7 +54,7 @@ void Map::draw(RenderTarget &target, RenderStates states)const
 
 Vector2i Map::loadFromFile(lua_State* L, RenderWindow &window)
 {
-	while (!mapFound)
+	do
 	{
 		cout << "Write a name of the map: ";
 		string input;
@@ -79,7 +79,7 @@ Vector2i Map::loadFromFile(lua_State* L, RenderWindow &window)
 			mapFound = checkPlayerSpawnArea();
 			mapFound = checkEnemySpawnArea();
 		}
-	}
+	} while (!mapFound);
 
 	if (mapFound)
 	{

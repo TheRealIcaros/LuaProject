@@ -51,16 +51,26 @@ end
 function printToTxt(name)
 	local file = io.open("..\\Map\\" .. name .. ".txt", "w")
 	
-	file:write(editor.size, "\n")
-	for y = 1, editor.size do
-		for x = 1, editor.size do
-			file:write(editor.nodeList[x][y]:getMaterial())
-		end
-		file:write("\n")
-	end
+	if(file ~= nil) then
+		print("The map '" .. name .. ".txt' already exists. Do you want to overwrite. [y/n]: ")
+		local input = confirmOverwrite()
 
-	file:close()
-	print("The map size is: " .. editor.size .. "x" .. editor.size .. "\nThe name of the map is: " .. name .. ".txt" .. " \nAnd is saved in Map folder")
+		if(input)then
+			file:write(editor.size, "\n")
+			for y = 1, editor.size do
+				for x = 1, editor.size do
+					file:write(editor.nodeList[x][y]:getMaterial())
+				end
+				file:write("\n")
+			end
+
+			file:close()
+			print("The map size is: " .. editor.size .. "x" .. editor.size .. "\nThe name of the map is: " .. name .. ".txt" .. " \nAnd is saved in Map folder")
+			return true
+		else
+			return false
+		end
+	end
 end
 
 function setMapSize(s)
@@ -87,16 +97,22 @@ end
 function loadFromFile(name)
 	print(name)
 	local file = io.open("..\\Map\\" .. name .. ".txt", "r")
-	io.input(file)
+	if(file ~= nil) then
+		print("Loading map: " .. name)
+		io.input(file)
 	
-	editor.size = tonumber(io.read())
-	resetTables()
+		editor.size = tonumber(io.read())
+		resetTables()
 
-	for y = 1, editor.size do
-		local temp = io.read()
-		for x = 1, editor.size do
-			local c = temp:sub(x, x)
-			editor.nodeList[x][y]:setMaterial(tonumber(c))
+		for y = 1, editor.size do
+			local temp = io.read()
+			for x = 1, editor.size do
+				local c = temp:sub(x, x)
+				editor.nodeList[x][y]:setMaterial(tonumber(c))
+			end
 		end
+		return true
+	else
+		return false
 	end
 end

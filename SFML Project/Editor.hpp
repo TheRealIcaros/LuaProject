@@ -61,6 +61,8 @@ public:
 
 	void changeMapSize(lua_State* E, RenderWindow &window);
 	void setMapSize(lua_State* E, int size);
+
+	static int confirmOverwrite(lua_State* E);
 };
 
 #endif // !

@@ -85,6 +85,10 @@ Editor::Editor()
 
 	this->E = luaL_newstate();
 	luaL_openlibs(this->E);
+
+	lua_pushcfunction(this->E, Editor::confirmOverwrite);
+	lua_setglobal(this->E, "confirmOverwrite");
+
 	int error = luaL_loadfile(this->E, "../Lua Scripts/Editor.lua") || lua_pcall(this->E, 0, 0, 0);
 	if (error)
 	{
@@ -247,6 +251,7 @@ void Editor::saveOnFile(lua_State* E, RenderWindow &window)
 {
 	if (Mouse::isButtonPressed(Mouse::Left) && this->saveButton.getGlobalBounds().contains(window.mapPixelToCoords(Mouse::getPosition(window))))
 	{
+		//Looking for only one player spawn point.
 		int found = 0;
 		for (int y = 0; y < this->map.size(); y++ && found <= 1)
 		{
@@ -268,22 +273,52 @@ void Editor::saveOnFile(lua_State* E, RenderWindow &window)
 		{
 			system("CLS");
 			cout << "No player spawns found [Blue Spawn Point]. Only 1 works." << endl;
-		}
-		else
+		}	
+		else     /*------If player spawn is only one then------*/
 		{
-			system("CLS");
-			cout << "Write a name on the map: ";
-			string input;
-			cin >> input;
-			cout << endl;
-
-			lua_getglobal(E, "printToTxt");
-			lua_pushstring(E, input.c_str());
-			int error = lua_pcall(E, 1, 0, 0);
-			if (error)
+			//Looking for enemy spawn points
+			found = 0;
+			for (int y = 0; y < this->map.size(); y++ && found <= 1)
 			{
-				cout << "Save Error msg: " << lua_tostring(this->E, -1) << endl;
-				lua_pop(this->E, 1);
+				for (int x = 0; x < this->map[y].size(); x++ && found <= 1)
+				{
+					if (this->map[x][y]->getTexture() == &this->spawnEnemyTexture)
+					{
+						found++;
+					}
+				}
+			}
+
+			if (found < 1)
+			{
+				cout << "To few enemy spawns [Red Spawn Point]. Must have at least one Enemy Spawn Point." << endl;
+			}
+			else	 /*------If enemy spawn is more then one or more------*/
+			{
+				bool mapSaved = false;
+				do
+				{
+					system("CLS");
+					cout << "Write a name on the map: ";
+					string input;
+					cin >> input;
+					cout << endl;
+
+					lua_getglobal(E, "printToTxt");
+					lua_pushstring(E, input.c_str());
+					int error = lua_pcall(E, 1, 1, 0);
+					if (error)
+					{
+						cout << "Save Error msg: " << lua_tostring(this->E, -1) << endl;
+						lua_pop(this->E, 1);
+					}
+					if (lua_isboolean(E, -1))
+					{
+						mapSaved = lua_toboolean(E, -1);
+					}
+					lua_pop(E, 1);
+
+				} while (!mapSaved);
 			}
 		}
 	}
@@ -293,19 +328,34 @@ void Editor::loadFromFile(lua_State* E, RenderWindow &window)
 {
 	if (Mouse::isButtonPressed(Mouse::Left) && this->loadButton.getGlobalBounds().contains(window.mapPixelToCoords(Mouse::getPosition(window))))
 	{
-		cout << "Write a name of the map: ";
-		string input;
-		cin >> input;
-		cout << endl;
-
-		lua_getglobal(E, "loadFromFile");
-		lua_pushstring(E, input.c_str());
-		int error = lua_pcall(E, 1, 0, 0);
-		if (error)
+		bool mapFound = false;
+		do
 		{
-			cout << "load Error msg: " << lua_tostring(this->E, -1) << endl;
-			lua_pop(this->E, 1);
-		}
+			cout << "Write a name of the map: ";
+			string input;
+			cin >> input;
+			cout << endl;
+
+			lua_getglobal(E, "loadFromFile");
+			lua_pushstring(E, input.c_str());
+			int error = lua_pcall(E, 1, 1, 0);
+			if (error)
+			{
+				cout << "load Error msg: " << lua_tostring(this->E, -1) << endl;
+				lua_pop(this->E, 1);
+			}
+			if (lua_isboolean(E, -1))
+			{
+				mapFound = lua_toboolean(E, -1);
+			}
+			lua_pop(E, 1);
+
+			if (mapFound == false)
+			{
+				cout << "The map '" << input << ".txt' was not found. Try again!" << endl;
+			}
+		} while (mapFound == false);
+		
 
 		reloadSprites(E);
 	}
@@ -426,4 +476,29 @@ void Editor::setMapSize(lua_State* E, int size)
 
 	clearVector();
 	reloadVectors();
+}
+
+int Editor::confirmOverwrite(lua_State* E)
+{
+	do
+	{
+		string input;
+		cin >> input;
+		cout << endl;
+
+		if (input == "y")
+		{
+			lua_pushboolean(E, true);
+			return 1;
+		}
+		else if (input == "n")
+		{
+			lua_pushboolean(E, false);
+			return 1;
+		}
+
+		cout << "Please enter correct input! [y/n]: ";
+	} while (true);
+
+	return 0;
 }
